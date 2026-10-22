@@ -181,13 +181,13 @@ textarea{font:inherit;font-size:13px;width:100%;min-height:120px;border:1px soli
     $('rdate').textContent=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'})+'  No.'+todayKey().replace(/-/g,'');
     const all=[...rows]; let liveRow=null;
     if(live){const mins=(Date.now()-live.start)/6e4; liveRow={cat:live.cat,min:mins,ppl:1,live:true}; all.push(liveRow);}
-    const sums={deep:0,meet:0,shallow:0,waste:0,rest:0}; let totMin=0, totAmt=0;
-    $('rows').innerHTML= all.length? all.map((x,k)=>{const [n,t]=catOf(x.cat);const amt=x.min*(r/60)*(x.ppl||1);sums[t]+=amt;totMin+=x.min;totAmt+=amt;
+    const sums={deep:0,meet:0,shallow:0,waste:0,rest:0}; const sm={deep:0,meet:0,shallow:0,waste:0,rest:0}; let totMin=0, totAmt=0;
+    $('rows').innerHTML= all.length? all.map((x,k)=>{const [n,t]=catOf(x.cat);const amt=x.min*(r/60)*(x.ppl||1);sums[t]+=amt;sm[t]+=x.min;totMin+=x.min;totAmt+=amt;
       return `<div class="r${x.live?' live':''}"><div class="nm"><span>${n}${x.ppl>1?' ×'+x.ppl+'人':''}</span>${x.live?'<span class="tag">計測中</span>':''}</div><span class="amt">${yen(amt)}${x.live?'':`<button class="del" data-k="${k}" aria-label="削除">×</button>`}</span><div class="sub"><span>${fmtMin(x.min)} × ${yen(r/60)}/分${x.ppl>1?' × '+x.ppl:''}</span><span>${new Date(x.at||Date.now()).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}</span></div></div>`;}).join('')
       : '<div class="sm c">（ここに今日の明細が並びます）</div>';
     $('totmin').textContent=Math.round(totMin); $('subtotal').textContent=yen(totAmt); $('total').textContent=yen(totAmt);
     $('meetamt').textContent=yen(sums.meet); $('deepamt').textContent=yen(sums.deep); $('wasteamt').textContent=yen(sums.waste);
-    const p=k=>totAmt?Math.round(sums[k]/totAmt*100):0;
+    const p=k=>totMin?Math.round(sm[k]/totMin*100):0;
     $('deeppct').textContent=p('deep')+'%'; $('meetpct').textContent=p('meet')+'%'; $('wastepct').textContent=p('waste')+'%';
     $('bar').innerHTML=['deep','meet','shallow','waste','rest'].map(k=>`<i style="width:${totAmt?sums[k]/totAmt*100:0}%;background:${{deep:'#1d7a4f',meet:'#b8441f',shallow:'#c98a2b',waste:'#a0a0a0',rest:'#6b8fb3'}[k]}"></i>`).join('');
     const dp=p('deep');

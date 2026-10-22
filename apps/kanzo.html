@@ -195,7 +195,7 @@ textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px
     x.fillStyle='#ece7da';x.font=`800 190px ${MIN}`;const ys=fmt(S.yearH);x.fillText(ys,70,300);const nw=x.measureText(ys).width;x.font=`700 56px ${MIN}`;x.fillText('時間',70+nw+14,300);
     x.fillStyle='#e07a5f';x.font=`700 40px ${MIN}`;x.fillText(`労働基準法の上限 720時間の ${(S.yearH/S.limit).toFixed(1)} 倍`,70,370);
     const bx=70,by=420,bw=W-140;const mx=Math.max(S.yearH,S.limit)*1.1; x.fillStyle='rgba(236,231,218,.12)';x.fillRect(bx,by,bw,22);x.fillStyle='#e07a5f';x.fillRect(bx,by,bw*S.yearH/mx,22);x.fillStyle='#ece7da';x.fillRect(bx+bw*S.limit/mx-2,by-8,4,38);x.font=`500 20px ${GO}`;x.fillStyle='#9aa0b0';x.fillText('人間の上限 720h',bx+bw*S.limit/mx+10,by-14);
-    x.fillStyle='#ece7da';x.font=`500 26px ${GO}`;x.fillText(`残りの人生で ${(S.lifeH/8760).toFixed(1)} 年分の夜勤 ・ 休肝日を週${S.off}日にすると −${fmt(S.saved)} 時間`,70,500);
+    x.fillStyle='#ece7da';x.font=`500 26px ${GO}`;x.fillText(`残りの人生で ${(S.lifeH/8760).toFixed(1)} 年分の夜勤`+(S.saved>0?` ・ 休肝日を週${S.off}日にすると −${fmt(S.saved)} 時間`:''),70,500);
     x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('肝臓の残業時間',W-60,H-24);x.textAlign='left';
     $('cardimg').src=cv.toDataURL('image/png');
   }

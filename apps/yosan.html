@@ -1,0 +1,211 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="平均余命から睡眠を引いた「残りの起きている時間」を、仕事・家族・スマホ・趣味にいまのペースで配分すると何年分ずつになるか。理想との差から、今週変える一手を出します。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/yosan.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="残り時間の予算"><meta property="og:description" content="平均余命から睡眠を引いた「残りの起きている時間」を、仕事・家族・スマホ・趣味にいまのペースで配分すると何年分ずつになるか。理想との差から、今週変える一手を出します。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/yosan.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="残り時間の予算"><meta name="twitter:description" content="平均余命から睡眠を引いた「残りの起きている時間」を、仕事・家族・スマホ・趣味にいまのペースで配分すると何年分ずつになるか。理想との差から、今週変える一手を出します。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>残り時間の予算</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 「あと何回」の姉妹作。168マスの1週間と、残り人生の帯。いまと理想を上下に並べる。 */
+:root{
+  --bg:#edeef1; --paper:#f8f8f6; --fg:#1c2230; --mute:#6b7281; --line:#d3d6dd;
+  --night:#0f1422; --night2:#1c2238; --night-fg:#ece7da; --night-mute:#9aa0b0;
+  --c0:#5c7399; --c1:#9aa6b8; --c2:#d07a2a; --c3:#c9566f; --c4:#2e9d6a; --c5:#7a5cc4; --c6:#d9a62b; --c7:#c7cbd3; --good:#2e7d4f;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --c1:#5f6a7c; --c7:#3a4256; --good:#5fbf8f; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --c1:#5f6a7c; --c7:#3a4256; --good:#5fbf8f; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.7;padding-block:0 72px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto}
+.night{background:linear-gradient(180deg,var(--night),var(--night2));color:var(--night-fg);padding-block:40px 48px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,6.5vw,48px);letter-spacing:.06em;margin:0;line-height:1.25}
+.lead{color:var(--night-mute);margin:10px 0 0;font-size:15px;max-width:34em}
+.big{margin-top:26px}
+.big .k{font-size:13px;letter-spacing:.15em;color:var(--night-mute)}
+.big .n{font-family:var(--display);font-weight:800;font-size:clamp(44px,11vw,84px);line-height:1.15;font-variant-numeric:tabular-nums}
+.big .n em{font-style:normal;color:#e58aa3}
+.big .s{font-size:14px;color:var(--night-mute);margin-top:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px 20px;margin-top:-24px;position:relative;z-index:1;display:grid;gap:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+label{display:grid;gap:6px;font-size:13px;color:var(--mute);letter-spacing:.04em}
+input,select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:6px 2px;border-radius:0;min-width:0;width:100%;font-variant-numeric:tabular-nums}
+input:focus,select:focus{outline:none;border-bottom-color:var(--c3)}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:14px;padding:8px 0;background:transparent;color:var(--mute);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--fg);color:var(--paper)}
+.tbl{display:grid;gap:6px}
+.th,.tr{display:grid;grid-template-columns:minmax(0,1.6fr) 1fr 1fr 1.2fr;gap:10px;align-items:center}
+.th{font-size:11px;color:var(--mute);letter-spacing:.08em;border-bottom:1px solid var(--line);padding-bottom:4px}
+.tr{padding:4px 0}
+.tr .nm{display:flex;align-items:center;gap:8px;font-size:14px;min-width:0}
+.tr .nm i{width:10px;height:10px;border-radius:2px;flex:none}
+.tr input{font-size:15px;padding:4px 2px;text-align:right}
+.tr input[type=range]{border:0;padding:0;height:26px;accent-color:var(--good)}
+.rest{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rest b.bad{color:var(--c3)}
+.hint{font-size:12px;color:var(--mute)}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.5vw,26px);letter-spacing:.08em;margin:0;line-height:1.3}
+.eyebrow{font-size:12px;letter-spacing:.3em;color:var(--mute)}
+#result{margin-top:44px;display:grid;gap:52px}
+.ch{display:grid;gap:14px}
+.weeks{display:grid;grid-template-columns:repeat(24,1fr);gap:2px}
+.weeks i{display:block;aspect-ratio:1;border-radius:1px;background:var(--c7)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+.two h3{font-family:var(--display);font-size:15px;margin:0 0 6px;letter-spacing:.1em}
+.legend{display:flex;gap:10px 14px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;background:var(--x)}
+.life{display:grid;gap:10px}
+.lr{display:grid;grid-template-columns:minmax(0,1.3fr) 2fr auto;gap:12px;align-items:center;font-size:14px}
+.lr .b{height:16px;background:var(--line);border-radius:2px;overflow:hidden;position:relative}
+.lr .b i{display:block;height:100%}
+.lr .b s{position:absolute;top:-3px;width:2px;height:22px;background:var(--fg);text-decoration:none}
+.lr .v{font-family:var(--display);font-size:18px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lr .v small{font-size:12px;color:var(--mute);font-family:var(--body)}
+.move{border:1px solid var(--line);border-left:4px solid var(--good);padding:16px;border-radius:4px;background:var(--paper);display:grid;gap:6px}
+.move .t{font-family:var(--display);font-size:20px}
+.move .t b{color:var(--good)}
+.move p{margin:0;font-size:14px;color:var(--mute)}
+.cardimg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);background:#0f1422}
+textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 18px;border-radius:3px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.sister{font-size:13px;color:var(--mute)}
+.sister a{color:var(--c3)}
+</style>
+
+<header class="night gut"><div class="wrap">
+  <h1>残り時間の予算</h1>
+  <p class="lead">平均余命から睡眠を引いた、残りの「起きている時間」。いまのペースで配分すると、何に何年分ずつ使うことになるのか。</p>
+  <div class="big"><div class="k">いまのままだと</div><div class="n" id="hero">—</div><div class="s" id="heros"></div></div>
+</div></header>
+
+<main class="gut"><div class="wrap">
+  <div class="card">
+    <div class="row">
+      <label>生年月日<input type="date" id="dob" value="1990-04-01" min="1920-01-01" max="2026-12-31"></label>
+      <label>性別（生命表の区分）<div class="seg" id="sex"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button><button type="button" data-v="a" aria-pressed="false">平均</button></div></label>
+      <label>睡眠（1日）<input type="number" id="sleep" value="7" min="3" max="12" step="0.5" inputmode="decimal"></label>
+    </div>
+    <div class="tbl">
+      <div class="th"><span>1日の使い方（時間）</span><span style="text-align:right">平日</span><span style="text-align:right">休日</span><span>理想（週）</span></div>
+      <div id="rows"></div>
+    </div>
+    <div class="rest"><span>残り（ぼんやり・移動・その他）：平日 <b id="restwd">—</b> 時間 ／ 休日 <b id="restwe">—</b> 時間</span><span id="restmsg"></span></div>
+    <div class="hint">入力はこの端末の中だけで計算され、どこにも送信されません。初期値は例です。「理想」は週あたりの時間。</div>
+  </div>
+
+  <div id="result">
+    <section class="ch">
+      <div class="eyebrow">一　一週間</div>
+      <h2>168時間は、こう使われている</h2>
+      <div class="two"><div><h3>いま</h3><div class="weeks" id="wnow"></div></div><div><h3>理想</h3><div class="weeks" id="wideal"></div></div></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">二　残りの人生</div>
+      <h2 id="h2b">残りの起きている時間を、年分で</h2>
+      <div class="life" id="life"></div>
+      <p class="hint">「年分」は24時間換算。仕事は65歳まで、それ以外は平均余命まで続くとして計算。黒い線は理想の配分で使う年数。</p>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">三　今週の一手</div>
+      <h2>いちばん差が大きいところを、ひとつだけ動かす</h2>
+      <div class="move" id="move"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">四　残す</div>
+      <h2>画像と文章</h2>
+      <img class="cardimg" id="cardimg" alt="結果画像のプレビュー" width="1200" height="630">
+      <canvas id="cardcv" hidden></canvas>
+      <div class="btns"><button class="btn primary" id="copyimg" type="button">画像をコピー</button><button class="btn" id="dlimg" type="button">画像を保存</button></div>
+      <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">文章をコピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+      <p class="sister">姉妹作：<a href="ato-nankai.html">あと何回</a> ／ <a href="shukan.html">その習慣、何年？</a></p>
+    </section>
+
+    <p class="foot">計算根拠：厚生労働省「令和5年簡易生命表」の年齢別平均余命（線形補間）。1週間＝平日5日＋休日2日。仕事は65歳までとして残り年数を区切り、それ以外の項目は平均余命まで同じペースが続くと仮定。参考：総務省「社会生活基本調査」では、日本の有業者の平日の仕事時間は約8時間、スマートフォン等の利用は10代〜30代で1日3時間を超える。数字は目安であり、予言ではありません。</p>
+  </div>
+</div></main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const LE={m:{0:81.09,5:76.31,10:71.34,15:66.37,20:61.39,25:56.56,30:51.68,35:46.85,40:42.06,45:37.32,50:32.63,55:28.05,60:23.68,65:19.52,70:15.56,75:11.89,80:8.61,85:5.98,90:4.16,95:2.90,100:2.00,110:1.2},
+            f:{0:87.14,5:82.33,10:77.35,15:72.38,20:67.39,25:62.47,30:57.56,35:52.68,40:47.82,45:42.99,50:38.23,55:33.54,60:28.91,65:24.38,70:19.96,75:15.68,80:11.63,85:7.98,90:5.47,95:3.50,100:2.30,110:1.4}};
+  function remain(age,sex){ if(sex==='a') return (remain(age,'m')+remain(age,'f'))/2; const t=LE[sex]; const ks=Object.keys(t).map(Number).sort((a,b)=>a-b); if(age<=0)return t[0]; if(age>=110)return t[110]; let lo=0,hi=110; for(let i=0;i<ks.length-1;i++){if(age>=ks[i]&&age<=ks[i+1]){lo=ks[i];hi=ks[i+1];break;}} return t[lo]+(t[hi]-t[lo])*(age-lo)/(hi-lo); }
+  const $=id=>document.getElementById(id); const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  const CAT=[['仕事・通勤','c0',9,0,true],['家事・身支度・食事','c1',3,4,false],['スマホ・SNS・動画','c2',3,5,false],['家族・友人','c3',1,4,false],['運動','c4',0.3,1,false],['学習・読書','c5',0.5,1,false],['趣味・遊び','c6',1,3,false]];
+  const store={get(k){try{return JSON.parse(localStorage.getItem('yosan:'+k));}catch(e){return null;}},set(k,v){try{localStorage.setItem('yosan:'+k,JSON.stringify(v));}catch(e){}}};
+  let sex='m'; let vals=CAT.map(c=>({wd:c[2],we:c[3],ideal:null})); vals[2].ideal=10; vals[3].ideal=23; vals[4].ideal=4;
+  const sv=store.get('in'); if(sv){ $('dob').value=sv.dob||$('dob').value; sex=sv.sex||'m'; $('sleep').value=sv.sleep??7; if(Array.isArray(sv.vals)&&sv.vals.length===CAT.length) vals=sv.vals; }
+  [...$('sex').children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===sex)));
+  $('sex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sex=b.dataset.v;[...$('sex').children].forEach(x=>x.setAttribute('aria-pressed',x===b));calc();});
+  const weekly=v=>v.wd*5+v.we*2;
+  $('rows').innerHTML=CAT.map((c,i)=>`<div class="tr"><div class="nm"><i style="background:var(--${c[1]})"></i><span>${c[0]}</span></div><input type="number" data-i="${i}" data-f="wd" value="${vals[i].wd}" min="0" max="24" step="0.5" inputmode="decimal" aria-label="${c[0]} 平日"><input type="number" data-i="${i}" data-f="we" value="${vals[i].we}" min="0" max="24" step="0.5" inputmode="decimal" aria-label="${c[0]} 休日"><input type="range" data-i="${i}" data-f="ideal" min="0" max="80" step="1" value="${vals[i].ideal??weekly(vals[i])}" aria-label="${c[0]} 理想（週）"></div>`).join('');
+  $('rows').addEventListener('input',e=>{const t=e.target;const i=+t.dataset.i;vals[i][t.dataset.f]=+t.value;if(t.dataset.f!=='ideal'&&vals[i].ideal===null){}calc();});
+  ['dob','sleep'].forEach(id=>$(id).addEventListener('input',calc));
+  let S=null;
+  function calc(){
+    const dob=new Date($('dob').value+'T00:00:00'); if(isNaN(dob))return; const age=(Date.now()-dob)/(365.25*864e5); const R=remain(age,sex); const sleep=+$('sleep').value||7;
+    const wakeDay=24-sleep; const wdSum=vals.reduce((s,v)=>s+v.wd,0), weSum=vals.reduce((s,v)=>s+v.we,0);
+    const restWd=wakeDay-wdSum, restWe=wakeDay-weSum; $('restwd').textContent=restWd.toFixed(1); $('restwe').textContent=restWe.toFixed(1); $('restwd').className=restWd<0?'bad':''; $('restwe').className=restWe<0?'bad':'';
+    $('restmsg').textContent= restWd<0||restWe<0 ? '24時間を超えています。どこかを減らしてください。' : '';
+    const wakeWeek=wakeDay*7; const workY=Math.max(0,Math.min(R,65-age));
+    const rows=CAT.map((c,i)=>{const w=weekly(vals[i]); const ideal=vals[i].ideal??w; const yrs=c[4]?workY:R; const life=w*52.18*yrs, lifeI=ideal*52.18*yrs; return {name:c[0],col:c[1],w,ideal,life,lifeI,yearsOf:life/8760,yearsI:lifeI/8760,isWork:c[4]};});
+    const restW=Math.max(0,wakeWeek-rows.reduce((s,r)=>s+r.w,0)); const restIdeal=Math.max(0,wakeWeek-rows.reduce((s,r)=>s+r.ideal,0));
+    rows.push({name:'その他・ぼんやり',col:'c7',w:restW,ideal:restIdeal,life:restW*52.18*R,lifeI:restIdeal*52.18*R,yearsOf:restW*52.18*R/8760,yearsI:restIdeal*52.18*R/8760});
+    S={age,R,sleep,wakeWeek,rows,sleepYears:sleep*365.25*R/8760};
+    store.set('in',{dob:$('dob').value,sex,sleep,vals});
+    const fam=rows[3], ph=rows[2];
+    $('hero').innerHTML=`家族や友人と過ごせるのは、<br>残り <em>${fam.yearsOf.toFixed(1)}</em> 年分。`;
+    $('heros').textContent=`スマホには ${ph.yearsOf.toFixed(1)} 年分、仕事には ${rows[0].yearsOf.toFixed(1)} 年分、眠りには ${S.sleepYears.toFixed(1)} 年。平均余命まであと ${R.toFixed(1)} 年。`;
+    // 168 grid
+    const grid=(key)=>{const cells=[];rows.forEach(r=>{const n=Math.round(r[key]);for(let k=0;k<n;k++)cells.push(r.col);});const sl=Math.round(sleep*7);for(let k=0;k<sl;k++)cells.push('sl');while(cells.length<168)cells.push('c7');return cells.slice(0,168).map(c=>`<i style="background:${c==='sl'?'transparent':'var(--'+c+')'};${c==='sl'?'box-shadow:inset 0 0 0 1px var(--line)':''}"></i>`).join('');};
+    $('wnow').innerHTML=grid('w'); $('wideal').innerHTML=grid('ideal');
+    $('legend').innerHTML=rows.map(r=>`<span style="--x:var(--${r.col})">${r.name} ${fmt(r.w)}h</span>`).join('')+`<span style="--x:transparent;outline:1px solid var(--line)">睡眠 ${fmt(sleep*7)}h</span>`;
+    const maxL=Math.max(...rows.map(r=>Math.max(r.life,r.lifeI)))||1;
+    $('h2b').textContent=`残りの起きている時間 ${fmt(wakeWeek*52.18*R)} 時間を、年分で`;
+    $('life').innerHTML=rows.map(r=>`<div class="lr"><span>${r.name}</span><span class="b"><i style="width:${r.life/maxL*100}%;background:var(--${r.col})"></i><s style="left:${r.lifeI/maxL*100}%"></s></span><span class="v">${r.yearsOf.toFixed(1)}<small> 年分${Math.abs(r.yearsI-r.yearsOf)>=0.05?`（理想 ${r.yearsI.toFixed(1)}）`:''}</small></span></div>`).join('');
+    // 今週の一手
+    const diffs=rows.slice(0,7).map(r=>({...r,d:r.w-r.ideal})); const src=diffs.slice().sort((a,b)=>b.d-a.d)[0]; const dst=diffs.slice().sort((a,b)=>a.d-b.d)[0];
+    if(src&&dst&&src.d>0.5&&dst.d<-0.5){ const h=Math.min(src.d,-dst.d); const gain=h*52.18*(dst.isWork?workY:R)/8760; const hours=h*52.18*R;
+      $('move').innerHTML=`<div class="t">「${src.name}」から「${dst.name}」へ、週 <b>${h.toFixed(1)} 時間</b>。</div><p>1日 ${fmt(h/7*60)} 分。それだけで、残りの人生で「${dst.name}」が <b style="color:var(--good)">+${gain.toFixed(1)} 年分</b>（${fmt(hours)} 時間）増えます。今週は、${src.name.includes('スマホ')?'寝る前の1時間だけスマホを別の部屋に置く':'その時間をカレンダーに先に予約する'}ところから。</p>`; S.move={src:src.name,dst:dst.name,h,gain}; }
+    else { $('move').innerHTML=`<div class="t">理想のスライダーを動かすと、ここに「今週の一手」が出ます。</div><p>いまの配分と理想が同じなら、それは良い知らせです。</p>`; S.move=null; }
+    const text=[`残り時間の予算（${Math.floor(age)}歳）`,`家族・友人 ${fam.yearsOf.toFixed(1)}年分 ／ スマホ ${ph.yearsOf.toFixed(1)}年分 ／ 仕事 ${rows[0].yearsOf.toFixed(1)}年分`,S.move?`今週の一手：${S.move.src}→${S.move.dst} 週${S.move.h.toFixed(1)}時間で +${S.move.gain.toFixed(1)}年分`:'',`#残り時間の予算`].filter(Boolean).join('\n');
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    drawCard();
+  }
+  async function drawCard(){
+    try{await document.fonts.load('800 100px "Shippori Mincho"');await document.fonts.load('500 30px "Zen Kaku Gothic New"');}catch(e){}
+    const W=1200,H=630,cv=$('cardcv');cv.width=W;cv.height=H;const x=cv.getContext('2d');const MIN='"Shippori Mincho","Hiragino Mincho ProN",serif',GO='"Zen Kaku Gothic New","Hiragino Sans",sans-serif';
+    const bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#0f1422');bg.addColorStop(1,'#1c2238');x.fillStyle=bg;x.fillRect(0,0,W,H);
+    const COL={c0:'#5c7399',c1:'#9aa6b8',c2:'#d07a2a',c3:'#c9566f',c4:'#2e9d6a',c5:'#7a5cc4',c6:'#d9a62b',c7:'#3a4256'};
+    // 右: 168グリッド
+    const cells=[];S.rows.forEach(r=>{for(let k=0;k<Math.round(r.w);k++)cells.push(COL[r.col]);});for(let k=0;k<Math.round(S.sleep*7);k++)cells.push('rgba(236,231,218,.08)');while(cells.length<168)cells.push(COL.c7);
+    const gx=720,gy=70,cs=18;cells.slice(0,168).forEach((c,i)=>{x.fillStyle=c;x.fillRect(gx+(i%24)*cs,gy+Math.floor(i/24)*cs,cs-3,cs-3);});
+    x.fillStyle='#9aa0b0';x.font=`500 18px ${GO}`;x.fillText('1週間 168時間（いま）',gx,gy+7*cs+24);
+    const fam=S.rows[3],ph=S.rows[2];
+    x.fillStyle='#9aa0b0';x.font=`500 26px ${GO}`;x.fillText('いまのままだと、家族や友人と過ごせるのは',70,120);
+    x.fillStyle='#ece7da';x.font=`800 190px ${MIN}`;const ys=fam.yearsOf.toFixed(1);x.fillText(ys,70,310);const nw=x.measureText(ys).width;x.font=`700 56px ${MIN}`;x.fillText('年分',70+nw+14,310);
+    x.fillStyle='#ece7da';x.font=`500 26px ${GO}`;x.fillText(`スマホ ${ph.yearsOf.toFixed(1)}年分 ・ 仕事 ${S.rows[0].yearsOf.toFixed(1)}年分 ・ 睡眠 ${S.sleepYears.toFixed(1)}年`,70,372);
+    if(S.move){x.fillStyle='#5fbf8f';x.font=`700 32px ${MIN}`;x.fillText(`${S.move.src}→${S.move.dst} 週${S.move.h.toFixed(1)}時間で、+${S.move.gain.toFixed(1)}年分。`,70,430);}
+    // 残り人生の帯
+    const tot=S.rows.reduce((s,r)=>s+r.life,0)||1;let bx=70;S.rows.forEach(r=>{const w=(W-140)*r.life/tot;x.fillStyle=COL[r.col];x.fillRect(bx,500,Math.max(0,w-2),26);bx+=w;});
+    x.fillStyle='#9aa0b0';x.font=`500 18px ${GO}`;x.fillText(`残りの起きている時間 ${fmt(S.wakeWeek*52.18*S.R)} 時間の内訳`,70,552);
+    x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('残り時間の予算',W-60,H-24);x.textAlign='left';
+    $('cardimg').src=cv.toDataURL('image/png');
+  }
+  function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+  $('copyimg').addEventListener('click',()=>{try{const item=new ClipboardItem({'image/png':new Promise(res=>$('cardcv').toBlob(res,'image/png'))});navigator.clipboard.write([item]).then(()=>toast('画像をコピーしました')).catch(()=>toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください'));}catch(e){toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください');}});
+  (async()=>{let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){} if(!dl){$('dlimg').hidden=true;return;} $('dlimg').addEventListener('click',()=>$('cardcv').toBlob(async b=>{try{await dl.save({filename:'yosan.png',data:b});toast('保存しました');}catch(e){if(!e||e.code!=='declined')toast('保存できませんでした');}},'image/png'));})();
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('sharetext').value).then(()=>toast('コピーしました')).catch(()=>$('sharetext').select());});
+  calc();
+})();
+</script>
+</head><body></body></html>

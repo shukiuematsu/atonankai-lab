@@ -1,0 +1,140 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/kado.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="角が立たない機"><meta property="og:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/kado.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="角が立たない機"><meta name="twitter:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>角が立たない機</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: ミキシングコンソール。左にフェーダー、右に出力モニター。角メーターが赤く振れる。 */
+:root{--bg:#e8e9e6;--panel:#f6f6f3;--fg:#15181a;--mute:#6a7076;--line:#cfd3d1;--accent:#0f7b6c;--hot:#d14b2f;--led:#cfd3d1;--mon:#111417;--montext:#e9f3ef;
+  --mono:"M PLUS 1 Code",ui-monospace,monospace;--body:"Zen Kaku Gothic New","Hiragino Sans",sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#111416;--panel:#1a1e21;--fg:#eceff0;--mute:#98a1a7;--line:#2c3236;--accent:#2fd0b5;--hot:#ff6b4a;--led:#2c3236;--mon:#0a0c0e;--montext:#dff5ec;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111416;--panel:#1a1e21;--fg:#eceff0;--mute:#98a1a7;--line:#2c3236;--accent:#2fd0b5;--hot:#ff6b4a;--led:#2c3236;--mon:#0a0c0e;--montext:#dff5ec;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 72px}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:16px}
+h1{font-family:var(--mono);font-size:28px;margin:0}
+.lead{color:var(--mute);font-size:14px;margin:2px 0 0;max-width:44em}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:14px;min-width:0}
+.panel h2{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mute);margin:0;font-weight:700}
+.sits{display:flex;flex-wrap:wrap;gap:6px}
+.sit{font:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.sit[aria-pressed=true]{background:var(--fg);color:var(--panel);border-color:var(--fg)}
+.faders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fader{display:grid;gap:6px;text-align:center;font-size:12px;color:var(--mute)}
+.fader .trk{height:150px;display:grid;place-items:center}
+.fader input[type=range]{writing-mode:vertical-lr;direction:rtl;width:30px;height:140px;accent-color:var(--accent);margin:0}
+.fader b{font-family:var(--mono);color:var(--fg);font-size:13px}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tog{font:inherit;font-size:13px;font-weight:700;padding:9px 10px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--mute);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tog::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--led);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.tog[aria-pressed=true]{color:var(--fg);border-color:var(--accent)}
+.tog[aria-pressed=true]::before{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.fields{display:grid;gap:8px}
+.fields label{display:grid;gap:3px;font-size:11px;color:var(--mute)}
+.fields input{font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%}
+.fields input:focus{outline:none;border-color:var(--accent)}
+.mon{background:var(--mon);color:var(--montext);border-radius:10px;padding:18px;font-size:15px;line-height:1.9;white-space:pre-wrap;min-height:260px;font-family:var(--body)}
+.meter{display:grid;gap:6px}
+.meter .bar{display:flex;gap:3px}
+.meter .bar i{flex:1;height:14px;border-radius:2px;background:var(--led)}
+.meter .bar i.on{background:var(--accent)}
+.meter .bar i.on.hot{background:var(--hot);box-shadow:0 0 8px var(--hot)}
+.meter .t{display:flex;justify-content:space-between;font-size:12px;color:var(--mute)}
+.meter .msg{font-size:13px;font-weight:700}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-size:14px;padding:10px 16px;border-radius:6px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--fg);color:var(--panel)}
+.note{font-size:12px;color:var(--mute);line-height:1.7}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--panel);padding:10px 18px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+<div class="wrap">
+  <div><h1>角が立たない機</h1><p class="lead">断る、催促する、値上げを伝える、ミスを報告する。言いにくいことを、フェーダーで調整して文章にします。AIは使わず、ビジネス日本語の型だけで組み立てます。</p></div>
+  <div class="cols">
+    <div class="panel">
+      <h2>INPUT ── 何を伝える？</h2>
+      <div class="sits" id="sits"></div>
+      <div class="fields">
+        <label>相手の呼び方<input id="to" value="田中様"></label>
+        <label>件名・対象<input id="item" value="来週の追加対応"></label>
+        <label>日付・期限<input id="date" value="10月28日（火）"></label>
+        <label>理由（空欄なら理由を書かない）<input id="reason" value="現在進行中の案件が立て込んでおり"></label>
+        <label>代替案（代替案スイッチON時）<input id="alt" value="来月第1週以降の着手"></label>
+      </div>
+      <h2>FADERS</h2>
+      <div class="faders">
+        <div class="fader"><div class="trk"><input type="range" id="pol" min="1" max="3" value="2" aria-label="丁寧さ"></div><b id="polv">丁寧さ 2</b><span>くだけた ↔ 格式</span></div>
+        <div class="fader"><div class="trk"><input type="range" id="str" min="1" max="3" value="2" aria-label="はっきり度"></div><b id="strv">はっきり 2</b><span>やんわり ↔ 断定</span></div>
+        <div class="fader"><div class="trk"><input type="range" id="len" min="1" max="3" value="2" aria-label="長さ"></div><b id="lenv">長さ 2</b><span>短く ↔ 丁重に</span></div>
+      </div>
+      <h2>SWITCHES</h2>
+      <div class="sw">
+        <button class="tog" id="out" type="button" aria-pressed="true">社外向け</button>
+        <button class="tog" id="cushion" type="button" aria-pressed="true">クッション言葉</button>
+        <button class="tog" id="altsw" type="button" aria-pressed="true">代替案を添える</button>
+        <button class="tog" id="thanks" type="button" aria-pressed="true">相手への感謝</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:16px;min-width:0">
+      <div class="panel">
+        <h2>MONITOR ── 出力</h2>
+        <div class="mon" id="mon"></div>
+        <div class="btns"><button class="btn primary" id="copy" type="button">コピー</button><button class="btn" id="rand" type="button">別の言い回し</button></div>
+      </div>
+      <div class="panel">
+        <h2>角メーター</h2>
+        <div class="meter"><div class="bar" id="bar"></div><div class="t"><span>丸い</span><span>角が立つ</span></div><div class="msg" id="msg"></div></div>
+        <p class="note">はっきり度を上げると角が立ち、丁寧さ・クッション・代替案・感謝で丸くなります。社外向けは同じ文でも角が立ちやすい計算です。メーターが赤なら、送る前にもう一段丸めるか、電話に切り替える合図。</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const S={
+    decline:{label:'依頼を断る',core:[['今回はお力になれそうになく、心苦しく思っております。','今回につきましては、お引き受けするのが難しい状況でございます。'],['今回はお受けすることが難しい状況です。','今回はお引き受けしかねます。'],['今回はお断りいたします。','今回は対応いたしません。']],alt:'代わりに、{alt}であれば対応が可能です。',cushion:['大変申し上げにくいのですが、','誠に恐縮ながら、']},
+    remind:{label:'催促する',core:[['{item}の件、その後いかがでしょうか。お手すきの際にご確認いただけますと幸いです。','{item}の件につきまして、進捗を伺えればと存じます。'],['{item}の件、{date}までにご回答をいただけますでしょうか。','{item}の件、{date}を目処にご連絡をお願いできますでしょうか。'],['{item}の件、期限の{date}を過ぎております。本日中のご対応をお願いいたします。','{item}の件、{date}が期限です。至急ご対応ください。']],alt:'難しい場合は、{alt}でも構いませんのでお知らせください。',cushion:['ご多忙のところ恐れ入りますが、','行き違いでしたら申し訳ございません。']},
+    extend:{label:'期限の延長を頼む',core:[['{item}につきまして、もし可能であれば{date}まで猶予をいただけないでしょうか。','{item}の期限について、{date}までお時間をいただくことはできますでしょうか。'],['{item}の期限を{date}まで延長していただきたく、ご相談です。','{item}の提出を{date}に変更させていただけないでしょうか。'],['{item}の期限を{date}に変更させてください。','{item}は{date}の提出とさせていただきます。']],alt:'先に{alt}をお渡しすることは可能です。',cushion:['勝手なお願いで恐縮ですが、','誠に申し上げにくいのですが、']},
+    price:{label:'値上げを伝える',core:[['{item}の価格につきまして、改定のご相談をさせていただきたく存じます。','{item}の価格を見直させていただきたく、ご相談がございます。'],['{date}より、{item}の価格を改定させていただきます。','{item}につきまして、{date}から新価格とさせていただきます。'],['{date}をもって{item}の価格を改定いたします。','{item}は{date}から新価格になります。']],alt:'現行価格でのご提供は{alt}まで承ります。',cushion:['誠に心苦しいお知らせとなりますが、','大変恐縮なお願いでございますが、']},
+    mistake:{label:'ミスを報告する',core:[['{item}につきまして、私の確認不足によりご迷惑をおかけし、深くお詫び申し上げます。','{item}の件で不手際があり、ご迷惑をおかけしましたこと、お詫びいたします。'],['{item}に誤りがありました。原因は私の確認不足で、すでに修正しております。','{item}で誤りが見つかりました。修正は完了しており、再発防止策を検討中です。'],['{item}に誤りがありました。修正済みです。','{item}の誤りを修正しました。原因は確認漏れです。']],alt:'今後は{alt}を徹底し、再発を防ぎます。',cushion:['まずはお詫びを申し上げます。','ご報告が遅くなり申し訳ございません。']},
+    meeting:{label:'会議を欠席する',core:[['{date}の会議ですが、あいにく他の予定と重なっており、参加が難しい状況です。','{date}の会議につきまして、都合がつかず欠席させていただきたく存じます。'],['{date}の会議は欠席させていただきます。議事録で内容を確認いたします。','{date}の会議は欠席いたします。決定事項は後ほど共有いただけますと幸いです。'],['{date}の会議は欠席します。','{date}の会議には出ません。資料だけ共有してください。']],alt:'{alt}であれば参加できます。',cushion:['直前のご連絡で恐縮ですが、','せっかくお声がけいただいたのに申し訳ないのですが、']},
+  };
+  const GREET={in:['お疲れさまです。','お疲れさまです。','お疲れさまでございます。'],out:['お世話になっております。','いつもお世話になっております。','平素より大変お世話になっております。']};
+  const CLOSE={in:['よろしくお願いします。','何卒よろしくお願いいたします。','ご確認のほど、何卒よろしくお願い申し上げます。'],out:['よろしくお願いいたします。','何卒よろしくお願いいたします。','ご多用のところ恐縮ですが、何卒よろしくお願い申し上げます。']};
+  const THANKS=['いつもありがとうございます。','日頃よりご協力いただき、ありがとうございます。','平素より格別のご高配を賜り、厚く御礼申し上げます。'];
+  let sit='decline', seed=0;
+  $('sits').innerHTML=Object.entries(S).map(([k,v])=>`<button class="sit" type="button" data-k="${k}" aria-pressed="${k===sit}">${v.label}</button>`).join('');
+  $('sits').addEventListener('click',e=>{const b=e.target.closest('.sit');if(!b)return;sit=b.dataset.k;[...$('sits').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));build();});
+  ['out','cushion','altsw','thanks'].forEach(id=>$(id).addEventListener('click',()=>{$(id).setAttribute('aria-pressed',String($(id).getAttribute('aria-pressed')!=='true'));build();}));
+  ['pol','str','len','to','item','date','reason','alt'].forEach(id=>$(id).addEventListener('input',build));
+  $('rand').addEventListener('click',()=>{seed++;build();});
+  const on=id=>$(id).getAttribute('aria-pressed')==='true';
+  function fill(t){return t.replace(/\{item\}/g,$('item').value||'該当の件').replace(/\{date\}/g,$('date').value||'期日').replace(/\{alt\}/g,$('alt').value||'別の形');}
+  function build(){
+    const pol=+$('pol').value, str=+$('str').value, len=+$('len').value; const out=on('out'); const s=S[sit];
+    $('polv').textContent='丁寧さ '+pol; $('strv').textContent='はっきり '+str; $('lenv').textContent='長さ '+len;
+    const g=out?'out':'in'; const lines=[];
+    lines.push(($('to').value||'').trim()); lines.push(GREET[g][pol-1]);
+    if(on('thanks')&&len>=2) lines.push(THANKS[pol-1]);
+    const reason=$('reason').value.trim();
+    let core=fill(s.core[str-1][seed%2]);
+    if(on('cushion')) core=s.cushion[(seed+pol)%2]+core;
+    if(reason) core=reason.replace(/[、。]$/,'')+'、'+core.replace(/^([^、]{0,12})、/,'$1、');
+    lines.push(core);
+    if(on('altsw')&&$('alt').value.trim()) lines.push(fill(s.alt));
+    if(len>=3) lines.push(str>=3?'ご不明な点があればお知らせください。':'ご迷惑をおかけしますが、ご理解いただけますと幸いです。');
+    if(len>=2||pol>=2) lines.push(CLOSE[g][pol-1]);
+    $('mon').textContent=lines.filter(Boolean).join('\n');
+    // 角メーター
+    let k=str*2-(pol-1)-(on('cushion')?1:0)-(on('altsw')?1:0)-(on('thanks')?0.5:0)+(out?1:0)+(reason?0:0.5); k=Math.max(0,Math.min(6,Math.round(k)));
+    $('bar').innerHTML=[0,1,2,3,4,5].map(i=>`<i class="${i<k?'on':''} ${i>=4?'hot':''}"></i>`).join('');
+    $('msg').textContent=k<=1?'丸すぎて伝わらない可能性。はっきり度を1つ上げても大丈夫。':k<=3?'ちょうどいい。この温度なら角は立ちません。':k<=4?'少し強め。社外なら、クッション言葉か代替案を足したい。':'角が立ちます。相手の立場が上なら、文面より電話か対面で。';
+    $('msg').style.color=k>=5?'var(--hot)':k<=1?'var(--mute)':'var(--accent)';
+  }
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('mon').textContent).then(()=>{$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1500);}).catch(()=>{});});
+  build();
+})();
+</script>
+</head><body></body></html>

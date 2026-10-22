@@ -1,0 +1,111 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/zeikin.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="税金解放日"><meta property="og:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/zeikin.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="税金解放日"><meta name="twitter:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>税金解放日</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 1年のカレンダーを365マスで。国のために働く日は朱、自分のための日は白。 */
+:root{--bg:#f0eee9;--paper:#fbfaf7;--fg:#1a1a1a;--mute:#6f6a62;--line:#d9d4ca;--kuni:#c33d2e;--kuni-soft:#f4d6d1;--me:#2f6f4f;--me-soft:#dcebe1;
+  --serif:"Noto Serif JP","Hiragino Mincho ProN",serif;--body:"Zen Kaku Gothic New","Hiragino Sans",sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121211;--paper:#1b1b19;--fg:#eeece6;--mute:#9b968d;--line:#33312c;--kuni:#e0574a;--kuni-soft:#3a1d19;--me:#5fbf8f;--me-soft:#15291f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121211;--paper:#1b1b19;--fg:#eeece6;--mute:#9b968d;--line:#33312c;--kuni:#e0574a;--kuni-soft:#3a1d19;--me:#5fbf8f;--me-soft:#15291f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.65;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 72px}
+.wrap{max-width:860px;margin:0 auto;display:grid;gap:20px}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(28px,6vw,40px);margin:0;letter-spacing:.04em}
+.lead{color:var(--mute);font-size:14px;margin:4px 0 0;max-width:40em}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:grid;gap:4px;font-size:12px;color:var(--mute);font-weight:700}
+.in{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:6px;padding:0 10px;background:var(--bg)}
+.in input,.in select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;padding:8px 0;width:100%;min-width:0;font-variant-numeric:tabular-nums}
+.in input:focus,.in select:focus{outline:none}
+.in span{font-size:12px;color:var(--mute);white-space:nowrap}
+.hero{display:grid;gap:4px;text-align:center;padding:10px 0 4px}
+.hero .k{font-size:14px;color:var(--mute);letter-spacing:.15em}
+.hero .d{font-family:var(--serif);font-weight:900;font-size:clamp(48px,13vw,92px);line-height:1.1;color:var(--kuni)}
+.hero .s{font-size:15px}
+.hero .s b{font-family:var(--serif);font-size:22px}
+.cal{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.m{display:grid;gap:4px}
+.m .n{font-size:12px;color:var(--mute);font-weight:700}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.days i{display:block;aspect-ratio:1;border-radius:2px;background:var(--me-soft)}
+.days i.k{background:var(--kuni)}
+.days i.t{box-shadow:inset 0 0 0 2px var(--fg)}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--me-soft)}
+.legend .k::before{background:var(--kuni)}
+.brk{display:grid;gap:8px}
+.brk div{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;align-items:center;font-size:13px}
+.brk .b{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.brk .b i{display:block;height:100%;background:var(--kuni)}
+.brk .v{font-variant-numeric:tabular-nums;text-align:right}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--bg);border-radius:6px;padding:10px 12px}
+.kpi .k{font-size:11px;color:var(--mute)}
+.kpi .v{font-family:var(--serif);font-weight:900;font-size:22px;line-height:1.2}
+textarea{font:inherit;font-size:13px;width:100%;min-height:110px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);padding:10px;resize:vertical}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 16px;border-radius:6px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.note{font-size:12px;color:var(--mute);line-height:1.75}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+<div class="wrap">
+  <div><h1>税金解放日</h1><p class="lead">1月1日から働いた分が、所得税・住民税・社会保険料・消費税にすべて消える日。その翌日から、あなたは自分のために働き始めます。</p></div>
+  <div class="panel">
+    <div class="row">
+      <label>年収（額面）<div class="in"><input type="number" id="inc" value="600" min="100" max="30000" step="10"><span>万円</span></div></label>
+      <label>年齢<div class="in"><input type="number" id="age" value="38" min="18" max="75"><span>歳</span></div></label>
+      <label>扶養家族<div class="in"><input type="number" id="dep" value="1" min="0" max="8"><span>人</span></div></label>
+      <label>手取りのうち使う割合<div class="in"><input type="number" id="spend" value="80" min="0" max="100" step="5"><span>%</span></div></label>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="hero"><div class="k">あなたの税金解放日</div><div class="d" id="day"></div><div class="s">1月1日から <b id="days"></b> 日間は、国と社会保険のために働いていました。</div></div>
+    <div class="cal" id="cal"></div>
+    <div class="legend"><span class="k">国・社会保険のために働く日</span><span>自分のために働く日</span></div>
+  </div>
+  <div class="panel">
+    <div class="kpis" id="kpis"></div>
+    <div class="brk" id="brk"></div>
+    <textarea id="share" readonly aria-label="シェア用テキスト"></textarea>
+    <div class="btns"><button class="btn primary" id="copy" type="button">コピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+  </div>
+  <p class="note">計算の前提（2026年・会社員・概算）：給与所得控除は2025年改正後の算式、基礎控除は合計所得に応じて58〜95万円、扶養控除は1人38万円（住民税33万円）。社会保険料は健康保険4.99%、介護保険0.80%（40歳以上）、厚生年金9.15%（標準報酬の上限を考慮）、雇用保険0.55%。所得税は累進税率に復興特別所得税2.1%を上乗せ、住民税は所得割10%と均等割5,000円。消費税は手取りのうち使う分に、軽減税率を含む実効8.5%で計算。酒税・ガソリン税・固定資産税・自動車税は含めていないので、実際の解放日はさらに後ろです。</p>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const yen=n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+  function calc(){
+    const y=+$('inc').value*1e4, age=+$('age').value, dep=+$('dep').value, sp=+$('spend').value/100;
+    const koujo= y<=1.9e6?650000: y<=3.6e6?y*0.3+80000: y<=6.6e6?y*0.2+440000: y<=8.5e6?y*0.1+1100000:1950000;
+    const kyuyo=Math.max(0,y-koujo);
+    const health=y*0.0499+(age>=40?y*0.0080:0), pension=Math.min(y,9.3e6)*0.0915, emp=y*0.0055; const shaho=health+pension+emp;
+    const kiso= kyuyo<=1.32e6?950000: kyuyo<=3.36e6?880000: kyuyo<=4.89e6?680000: kyuyo<=6.55e6?630000:580000;
+    const taxable=Math.max(0,kyuyo-shaho-kiso-dep*380000);
+    const br=[[1.95e6,.05,0],[3.3e6,.10,97500],[6.95e6,.20,427500],[9e6,.23,636000],[1.8e7,.33,1536000],[4e7,.40,2796000],[Infinity,.45,4796000]];
+    let income=0; for(const [lim,r,d] of br){ if(taxable<=lim){ income=(taxable*r-d)*1.021; break; } }
+    const resTaxable=Math.max(0,kyuyo-shaho-430000-dep*330000); const resident=resTaxable*0.10+5000;
+    const net=y-shaho-income-resident; const cons=net*sp*0.085;
+    const total=shaho+income+resident+cons; const rate=total/y;
+    const days=Math.round(365*rate); const d=new Date(2026,0,1+days); 
+    $('day').textContent=`${d.getMonth()+1}月${d.getDate()}日`; $('days').textContent=days;
+    // calendar
+    const M=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']; let idx=0; const today=new Date(); const tIdx=Math.floor((today-new Date(today.getFullYear(),0,1))/864e5);
+    $('cal').innerHTML=M.map((m,mi)=>{const n=new Date(2026,mi+1,0).getDate();let s='';for(let i=0;i<n;i++){s+=`<i class="${idx<days?'k':''} ${idx===tIdx?'t':''}"></i>`;idx++;}return `<div class="m"><div class="n">${m}</div><div class="days">${s}</div></div>`;}).join('');
+    const hrs=8*rate; const h=Math.floor(hrs), mm=Math.round((hrs-h)*60);
+    $('kpis').innerHTML=[['負担率',(rate*100).toFixed(1)+'%'],['年間の負担額',yen(total)],['1日8時間のうち',`${h}時間${mm}分`],['週5日のうち',(5*rate).toFixed(1)+'日']].map(([k,v])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    const rows=[['社会保険料',shaho],['所得税',income],['住民税',resident],['消費税',cons]]; const mx=Math.max(...rows.map(r=>r[1]));
+    $('brk').innerHTML=rows.map(([k,v])=>`<div><span>${k}</span><span class="b"><i style="width:${v/mx*100}%"></i></span><span class="v">${yen(v)}</span></div>`).join('');
+    const text=`私の税金解放日は ${d.getMonth()+1}月${d.getDate()}日。\n1月1日から${days}日間は国と社会保険のために働いている計算（負担率${(rate*100).toFixed(0)}%）。\n1日8時間のうち ${h}時間${mm}分。\n#税金解放日`;
+    $('share').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+  }
+  ['inc','age','dep','spend'].forEach(id=>$(id).addEventListener('input',calc));
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('share').value).then(()=>{$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1500);}).catch(()=>$('share').select());});
+  calc();
+})();
+</script>
+</head><body></body></html>

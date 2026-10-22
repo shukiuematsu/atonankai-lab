@@ -1,0 +1,229 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/ketakan.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="ケタ感"><meta property="og:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/ketakan.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ケタ感"><meta name="twitter:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>ケタ感</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 一問一画面。ドット文字の巨大な数字と、桁を動かすスライダーだけ。 */
+:root{
+  --bg:#e7ebee; --paper:#f7f8f9; --fg:#14181c; --mute:#66707a; --line:#c9d0d6;
+  --accent:#d9452b; --accent-ink:#fff; --track:#c9d0d6; --thumb:#14181c;
+  --g:#2f9e5b; --y:#d9a62b; --o:#e0702c; --k:#8a9199;
+  --display:"DotGothic16","Hiragino Sans",monospace; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1316; --paper:#171c21; --fg:#eef1f3; --mute:#8d97a1; --line:#2b333b; --accent:#ff6a4d; --accent-ink:#0f1316; --track:#2b333b; --thumb:#eef1f3; --k:#4a535c; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f1316; --paper:#171c21; --fg:#eef1f3; --mute:#8d97a1; --line:#2b333b; --accent:#ff6a4d; --accent-ink:#0f1316; --track:#2b333b; --thumb:#eef1f3; --k:#4a535c; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 56px}
+.wrap{max-width:640px;margin:0 auto;display:grid;gap:16px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:400;font-size:34px;margin:0;letter-spacing:.1em}
+h1 small{font-size:14px;color:var(--mute);letter-spacing:.05em;margin-left:8px}
+.stats{font-family:var(--display);font-size:14px;color:var(--mute)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px 18px;display:grid;gap:16px}
+.qno{font-family:var(--display);font-size:13px;color:var(--mute);letter-spacing:.15em}
+.q{font-size:clamp(20px,5vw,26px);font-weight:700;line-height:1.4;margin:0;text-wrap:balance}
+.q .u{color:var(--mute);font-size:.7em;font-weight:500;margin-left:6px}
+.guess{font-family:var(--display);font-size:clamp(38px,11vw,64px);line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums;min-height:1.1em;word-break:break-all}
+.guess .sci{display:block;font-size:14px;color:var(--mute);margin-top:6px;letter-spacing:.1em}
+.sl{display:grid;gap:4px}
+.sl label{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);font-weight:700;letter-spacing:.05em}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px;margin:0}
+.ticks{display:flex;justify-content:space-between;font-family:var(--display);font-size:10px;color:var(--mute)}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:13px;border-radius:6px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;letter-spacing:.1em}
+.btn.ghost{background:transparent;border:1.5px solid var(--fg);color:var(--fg)}
+.btn:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btns .btn{flex:1}
+.reveal{display:grid;gap:10px;border-top:1px dashed var(--line);padding-top:14px}
+.reveal .ans{font-family:var(--display);font-size:clamp(28px,8vw,44px);line-height:1.1}
+.reveal .ans small{font-size:13px;color:var(--mute);display:block;letter-spacing:.1em;margin-top:4px}
+.verdict{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.verdict .em{font-size:26px}
+.verdict .pt{font-family:var(--display);margin-left:auto;font-size:22px}
+.src{font-size:12px;color:var(--mute);line-height:1.6}
+.bar{display:flex;gap:4px}
+.bar i{flex:1;height:8px;border-radius:2px;background:var(--k);opacity:.35}
+.bar i.g{background:var(--g);opacity:1}.bar i.y{background:var(--y);opacity:1}.bar i.o{background:var(--o);opacity:1}.bar i.k{opacity:1}
+.final .score{font-family:var(--display);font-size:clamp(48px,14vw,84px);line-height:1}
+.final .score small{font-size:18px;color:var(--mute)}
+.emoji{font-size:28px;letter-spacing:2px}
+textarea{font:inherit;font-size:14px;width:100%;min-height:110px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);padding:10px;resize:vertical}
+.list{display:grid;gap:8px;font-size:14px}
+.list div{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px}
+.list .n{font-family:var(--display);color:var(--mute)}
+.list b{font-family:var(--display);font-weight:400}
+.how{font-size:13px;color:var(--mute);line-height:1.7}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+a{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>ケタ感<small id="mode">今日の5問 #1</small></h1>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="panel" id="game">
+    <div class="qno" id="qno">Q1 / 5</div>
+    <p class="q" id="qtext"></p>
+    <div class="guess" id="guess"></div>
+    <div class="sl"><label><span>桁（10の何乗か）</span><span id="explabel"></span></label><input type="range" id="exp" min="0" max="15" step="1" value="6"><div class="ticks"><span>1</span><span>千</span><span>百万</span><span>十億</span><span>兆</span><span>千兆</span></div></div>
+    <div class="sl"><label><span>先頭の数字</span><span id="manlabel"></span></label><input type="range" id="man" min="10" max="99" step="1" value="30"></div>
+    <div class="btns"><button class="btn" id="submit" type="button">これで決める</button></div>
+    <div class="reveal" id="reveal" hidden>
+      <div class="verdict"><span class="em" id="em"></span><span id="vtext"></span><span class="pt" id="pt"></span></div>
+      <div class="ans"><span id="ans"></span><small id="anssci"></small></div>
+      <div class="src" id="src"></div>
+      <div class="btns"><button class="btn" id="next" type="button">次の問題</button></div>
+    </div>
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <div class="panel final" id="final" hidden>
+    <div class="qno" id="ftitle">今日の結果</div>
+    <div class="score"><span id="total">0</span><small> / 500</small></div>
+    <div class="emoji" id="emoji"></div>
+    <div class="list" id="review"></div>
+    <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+    <div class="btns"><button class="btn" id="copy" type="button">結果をコピー</button><a class="btn ghost" id="xlink" href="#" target="_blank" rel="noopener" style="text-align:center">Xに投稿</a></div>
+    <div class="btns"><button class="btn ghost" id="practice" type="button">練習モードで、もう5問</button></div>
+  </div>
+
+  <p class="how">世界の数字を「桁」で当てるゲーム。毎日 0 時（日本時間）に5問が入れ替わり、全員同じ問題が出ます。採点は正解との比率で、🟩 1.4倍以内 / 🟨 3倍以内 / 🟧 10倍以内 / ⬛ それ以上。数値は公的統計や学術推計の概数です。</p>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+
+<script>
+(function(){
+  const Q=[
+    ["今この瞬間、飛行機に乗って空にいる人の数",1.3e6,"人","常時約1万機が飛行、1機あたり平均130人として（FlightAware／IATA）"],
+    ["地球上にいるアリの総数",2e16,"匹","Schultheiss ら 2022（PNAS）の推定 2京匹"],
+    ["人間の体を作る細胞の数",3.7e13,"個","Bianconi ら 2013 の推定 37兆個"],
+    ["世界で1年間に生まれる赤ちゃんの数",1.32e8,"人","国連 WPP 2024、2025年の出生数約1.3億人"],
+    ["東京都の人口",1.42e7,"人","東京都推計 2025年"],
+    ["世界のGDP（年間、米ドル）",1.15e14,"ドル","IMF WEO 2025、名目約115兆ドル"],
+    ["富士山の高さ",3776,"m","国土地理院"],
+    ["地球から月までの平均距離",384400,"km","NASA"],
+    ["1日にGoogleで行われる検索の回数",1.4e10,"回","Google 2025年公表の年間5兆回から換算"],
+    ["世界で飼育されている牛の数",1.5e9,"頭","FAO 2023"],
+    ["人間ひとりの血管をつなげた長さ",1e5,"km","教科書的推定（約10万km、地球2周半）"],
+    ["日本で1年間に生まれる赤ちゃんの数",6.86e5,"人","厚生労働省 人口動態統計 2024（68万6千人）"],
+    ["日本の国の一般会計予算（1年、円）",1.15e14,"円","令和7年度 当初予算 約115兆円"],
+    ["世界で1日に飲まれるコーヒーの杯数",2.25e9,"杯","英国コーヒー協会ほか（約22.5億杯/日）"],
+    ["人間の心臓が1日に打つ回数",1e5,"回","毎分70回×1440分"],
+    ["光が1秒間に進む距離",299792,"km","定義値 299,792.458 km/s"],
+    ["エベレストの標高",8849,"m","ネパール・中国の2020年共同測量"],
+    ["太平洋の面積",1.65e8,"km²","NOAA"],
+    ["世界の人口",8.26e9,"人","国連 WPP 2024 の2026年推計"],
+    ["世界に存在する言語の数",7164,"言語","Ethnologue 2024"],
+    ["人間の頭髪の本数",1e5,"本","平均約10万本"],
+    ["日本にあるコンビニの店舗数",5.6e4,"店","日本フランチャイズチェーン協会 2025"],
+    ["東京タワーの高さ",333,"m","日本電波塔"],
+    ["地球の赤道の一周の長さ",40075,"km","WGS84"],
+    ["地球から太陽までの距離",1.496e8,"km","1天文単位"],
+    ["1年間の秒数",3.156e7,"秒","365.25日×86,400秒"],
+    ["日本で1年間に生産される自動車の台数",8.2e6,"台","日本自動車工業会 2024"],
+    ["世界のスマートフォンの契約数",7.3e9,"件","Ericsson Mobility Report 2025"],
+    ["人類が1年間に排出する二酸化炭素",3.8e10,"トン","Global Carbon Project 2024（化石燃料由来 約378億t）"],
+    ["世界で1日に送られるメールの通数",3.6e11,"通","Radicati Group 2024"],
+    ["サハラ砂漠の面積",9.2e6,"km²","約920万km²、日本の24倍"],
+    ["世界の資産100万ドル以上の人の数",5.8e7,"人","UBS Global Wealth Report 2024（約5,800万人）"],
+    ["日本の人口",1.233e8,"人","総務省 2025年推計"],
+    ["国連の加盟国数",193,"か国","国際連合"],
+    ["世界で飼われているネコの数",6e8,"匹","各種推計（野良含め6億〜）"],
+    ["人間のゲノムに含まれる遺伝子の数",2e4,"個","タンパク質をコードする遺伝子 約2万個"],
+    ["世界の商業用旅客機の総数",2.9e4,"機","Cirium 2024"],
+    ["人間の脳の神経細胞の数",8.6e10,"個","Herculano-Houzel 2009"],
+    ["東京–大阪間の直線距離",400,"km","約400km（新幹線は約515km）"],
+    ["世界で1年間に売れるスマホの台数",1.2e9,"台","IDC 2024"],
+    ["太陽系で最大の惑星、木星の直径",139820,"km","NASA"],
+    ["世界の海に浮かぶプラスチックごみの個数",1.7e14,"個","Eriksen ら 2023 の推定 170兆個"],
+    ["1円玉の重さ",1,"g","日本の1円硬貨は1.0g"],
+    ["世界で1年間に消費される米",5.2e8,"トン","USDA 2024/25（精米ベース約5.2億t）"],
+    ["ウィキペディア英語版の記事数",7e6,"記事","Wikipedia 2025"],
+    ["日本の郵便ポストの数",1.75e5,"本","日本郵便 2024"],
+    ["地球上の木の本数",3.04e12,"本","Crowther ら 2015（Nature）"],
+    ["ヒトの一生の心拍数",2.5e9,"回","80年×毎分70回として約25億回"],
+    ["世界の年間ビール消費量",1.9e11,"リットル","キリン調査 2023 約1.9億kL"],
+    ["世界の年間航空旅客数",5e9,"人","IATA 2025 見通し約50億人"],
+    ["日本の年間ラーメン店の数",2.4e4,"店","タウンページDB 推計"],
+    ["世界のピアノの鍵盤の数（1台）",88,"鍵","標準的なピアノ"],
+    ["成人の体内の血液量",5,"リットル","約4〜6リットル"],
+    ["琵琶湖の面積",669,"km²","国土地理院"],
+    ["地球誕生からの年数",4.54e9,"年","放射年代測定"],
+    ["日本の年間カップ麺の消費個数",4e9,"個","世界ラーメン協会 2024（日本 約40億食）"],
+    ["世界の年間映画入場者数（映画館）",6.5e9,"人","Gower Street Analytics 推計"],
+    ["人間が一生に歩く歩数",1.5e8,"歩","1日5,000歩×80年"],
+    ["1日に世界で投稿されるXのポスト数",5e8,"件","X 公表値約5億件/日"],
+    ["世界の年間新車販売台数",9e7,"台","2024年 約9,000万台"],
+  ];
+  const $=id=>document.getElementById(id);
+  function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+  function jstDay(){const d=new Date(Date.now()+9*3600e3);return Math.floor(d.getTime()/864e5);}
+  const EPOCH=Math.floor(Date.UTC(2026,9,22)/864e5)+0; // 2026-10-22 を #1
+  const dayNo=jstDay()-EPOCH+1;
+  function pick(seed,n){const r=mulberry(seed);const idx=[...Q.keys()];for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}return idx.slice(0,n).map(i=>Q[i]);}
+  // 日本語数詞
+  function jpNum(n){
+    if(n<1e4) return (Number.isInteger(n)?n:+n.toPrecision(3)).toLocaleString('ja-JP');
+    const units=[[1e16,'京'],[1e12,'兆'],[1e8,'億'],[1e4,'万']];
+    for(const [v,u] of units){ if(n>=v){ const m=n/v; const s=m>=100?Math.round(m).toLocaleString('ja-JP'):+m.toPrecision(3); return s+u; } }
+    return String(n);
+  }
+  function sci(n){const e=Math.floor(Math.log10(n));const m=n/Math.pow(10,e);return `${m.toFixed(1)} × 10^${e}`;}
+  let qs, i=0, results=[], practice=false, seedBase;
+  const store={get(k,d){try{const v=localStorage.getItem('ketakan:'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('ketakan:'+k,JSON.stringify(v));}catch(e){}}};
+  function start(isPractice){
+    practice=isPractice; i=0; results=[];
+    seedBase= isPractice ? (Date.now()%1e9) : dayNo*7919;
+    qs=pick(seedBase,5);
+    $('mode').textContent= isPractice ? '練習モード' : `今日の5問 #${dayNo}`;
+    $('final').hidden=true; $('game').hidden=false;
+    const saved= !isPractice && store.get('day'+dayNo,null);
+    if(saved){results=saved; finish(); return;}
+    show();
+  }
+  function show(){
+    const q=qs[i]; $('qno').textContent=`Q${i+1} / 5`;
+    $('qtext').innerHTML=`${q[0]}<span class="u">（${q[2]}）</span>`;
+    $('exp').value=6; $('man').value=30; upd();
+    $('reveal').hidden=true; $('submit').hidden=false; $('exp').disabled=false; $('man').disabled=false;
+    drawBar();
+  }
+  function cur(){return (+$('man').value/10)*Math.pow(10,+$('exp').value);}
+  function upd(){const g=cur();$('guess').innerHTML=`${jpNum(g)}<span class="sci">${sci(g)}</span>`;$('explabel').textContent=`10^${$('exp').value}`;$('manlabel').textContent=(+$('man').value/10).toFixed(1);}
+  function grade(g,a){const d=Math.abs(Math.log10(g)-Math.log10(a));const pt=Math.max(0,Math.round(100*(1-d/2)));const cls=d<0.15?'g':d<0.5?'y':d<1?'o':'k';return {d,pt,cls};}
+  const EM={g:'🟩',y:'🟨',o:'🟧',k:'⬛'};
+  function drawBar(){$('bar').innerHTML=[0,1,2,3,4].map(k=>`<i class="${results[k]?results[k].cls:''}"></i>`).join('');}
+  $('exp').addEventListener('input',upd); $('man').addEventListener('input',upd);
+  $('submit').addEventListener('click',()=>{
+    const q=qs[i], g=cur(), r=grade(g,q[1]); results.push({q:q[0],g,a:q[1],u:q[2],...r});
+    const ratio=g>q[1]?g/q[1]:q[1]/g;
+    $('em').textContent=EM[r.cls]; $('pt').textContent=`+${r.pt}`;
+    $('vtext').textContent= r.cls==='g'?'ほぼ正解。桁感が鋭い':r.cls==='y'?`${ratio.toFixed(1)}倍のズレ。悪くない`:r.cls==='o'?`${ratio.toFixed(1)}倍のズレ。桁は近い`:`${ratio>=100?Math.round(ratio).toLocaleString():ratio.toFixed(0)}倍のズレ。${g>q[1]?'多く':'少なく'}見積もりすぎ`;
+    $('ans').textContent=`${jpNum(q[1])} ${q[2]}`; $('anssci').textContent=sci(q[1]); $('src').textContent='出典・根拠: '+q[3];
+    $('reveal').hidden=false; $('submit').hidden=true; $('exp').disabled=true; $('man').disabled=true; drawBar();
+    $('next').textContent= i===4 ? '結果を見る' : '次の問題';
+  });
+  $('next').addEventListener('click',()=>{ i++; if(i>=5){ if(!practice) store.set('day'+dayNo,results); finish(); } else show(); });
+  function finish(){
+    $('game').hidden=true; $('final').hidden=false;
+    const total=results.reduce((s,r)=>s+r.pt,0);
+    $('total').textContent=total; $('emoji').textContent=results.map(r=>EM[r.cls]).join('');
+    $('ftitle').textContent= practice?'練習の結果':`今日の結果 #${dayNo}`;
+    $('review').innerHTML=results.map((r,k)=>`<div><span class="n">Q${k+1}</span><span>${r.q}<br><span style="color:var(--mute);font-size:12px">あなた ${jpNum(r.g)} / 正解 ${jpNum(r.a)} ${r.u}</span></span><b>${r.pt}</b></div>`).join('');
+    const text=`ケタ感 ${practice?'練習':'#'+dayNo} ${total}/500\n${results.map(r=>EM[r.cls]).join('')}\n#ケタ感`;
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    if(!practice){ const st=store.get('stats',{played:0,best:0,streak:0,last:0,sum:0}); if(st.last!==dayNo){ st.played++; st.sum+=total; st.best=Math.max(st.best,total); st.streak=(st.last===dayNo-1)?st.streak+1:1; st.last=dayNo; store.set('stats',st);} renderStats(); }
+  }
+  function renderStats(){const st=store.get('stats',null); $('stats').textContent= st&&st.played? `${st.played}日目 / 連続${st.streak}日 / 最高${st.best} / 平均${Math.round(st.sum/st.played)}`:'';}
+  $('copy').addEventListener('click',()=>{const t=$('sharetext');const show=()=>{$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1500)};navigator.clipboard&&navigator.clipboard.writeText(t.value).then(show).catch(()=>{t.select();show();});});
+  $('practice').addEventListener('click',()=>start(true));
+  renderStats(); start(false);
+})();
+</script>
+</head><body></body></html>

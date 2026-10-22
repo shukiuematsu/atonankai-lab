@@ -1,0 +1,116 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/satsutaba.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="札束タワー"><meta property="og:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/satsutaba.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="札束タワー"><meta name="twitter:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>札束タワー</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 画面いっぱいの縦の物差し。札束が伸び、カメラが引いていく。 */
+:root{
+  --bg:#f3efe6; --paper:#fffdf8; --fg:#1f1b14; --mute:#746c5e; --line:#ddd5c4; --accent:#1e8f5a; --bill:#c9b36a; --sky-top:#0b1026; --sky-mid:#2a5b9c; --sky-bot:#9fd3ff; --ground:#6d8a4c;
+  --pop:"Mochiy Pop One","Hiragino Sans",sans-serif; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#121418; --paper:#1a1d24; --fg:#f1ede4; --mute:#9a958a; --line:#2d323c; --accent:#4fcf8e; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#121418; --paper:#1a1d24; --fg:#f1ede4; --mute:#9a958a; --line:#2d323c; --accent:#4fcf8e; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px}
+.wrap{max-width:900px;margin:0 auto;display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.wrap{grid-template-columns:1fr}}
+h1{font-family:var(--pop);font-weight:400;font-size:34px;margin:0;letter-spacing:.02em}
+.lead{color:var(--mute);font-size:14px;margin:4px 0 14px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.presets{display:grid;gap:6px}
+.pre{font:inherit;font-size:14px;text-align:left;padding:9px 12px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.pre b{font-family:var(--pop);font-weight:400;white-space:nowrap}
+.pre[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.pre:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.custom{display:grid;grid-template-columns:1fr auto;gap:8px}
+.in{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:8px;padding:0 10px}
+.in input,.in select{font:inherit;font-size:16px;border:0;background:transparent;color:var(--fg);padding:9px 0;width:100%;min-width:0}
+.in input:focus,.in select:focus{outline:none}
+.go{font-family:var(--pop);font-size:16px;padding:12px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--bg);border-radius:8px;padding:10px 12px;min-width:0}
+.kpi .k{font-size:11px;color:var(--mute)}
+.kpi .v{font-family:var(--pop);font-size:20px;line-height:1.2;word-break:break-all}
+.kpi .s{font-size:12px;color:var(--mute)}
+.stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0b1026}
+canvas{display:block;width:100%;height:auto}
+.caption{position:absolute;left:14px;top:12px;color:#fff;font-family:var(--pop);font-size:clamp(18px,4vw,28px);text-shadow:0 2px 12px rgba(0,0,0,.6);max-width:70%;line-height:1.3}
+.caption small{display:block;font-family:var(--body);font-size:13px;opacity:.85;font-weight:500}
+textarea{font:inherit;font-size:13px;width:100%;min-height:100px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);padding:10px;resize:vertical}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:8px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.note{font-size:12px;color:var(--mute);line-height:1.7}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+
+<div class="wrap">
+  <div style="display:grid;gap:14px;min-width:0">
+    <div><h1>札束タワー</h1><p class="lead">その金額、1万円札で積むと何メートル？ 1枚0.1mm・1gで計算。どこまで伸びるか見届けてください。</p></div>
+    <div class="panel">
+      <div class="presets" id="presets"></div>
+      <div class="custom"><div class="in"><input type="number" id="amt" value="500" min="0" step="1" inputmode="numeric" aria-label="金額"></div><div class="in"><select id="unit" aria-label="単位"><option value="1e4">万円</option><option value="1e8">億円</option><option value="1e12">兆円</option></select></div></div>
+      <button class="go" id="go" type="button">積む</button>
+    </div>
+    <div class="panel">
+      <div class="kpis" id="kpis"></div>
+      <textarea id="share" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">コピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+    </div>
+  </div>
+  <div style="display:grid;gap:10px;min-width:0">
+    <div class="stage"><canvas id="cv" width="900" height="1100" aria-label="札束の高さと比較対象"></canvas><div class="caption" id="cap"></div></div>
+    <p class="note">比較対象の高さ：人 1.7m、キリン 5.5m、奈良の大仏 15m、東京タワー 333m、スカイツリー 634m、富士山 3,776m、エベレスト 8,849m、旅客機の巡航高度 10km、成層圏 50km、宇宙の境界 100km、国際宇宙ステーション 400km、地球の直径 12,742km、月まで 384,400km。金額の出典：国税庁 民間給与実態統計 2024（平均給与 460万円）、財務省 2025年度一般会計 115兆円、国債・借入金残高 2025年6月末 1,324兆円、ドジャースと大谷選手の契約 7億ドル（約1,015億円）。</p>
+  </div>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const PRE=[['コンビニのおにぎり',150],['平均給与（年）',4.6e6],['1億円',1e8],['年末ジャンボ1等',7e8],['大谷翔平の契約',1.015e11],['日本の国家予算（年）',1.15e14],['日本の借金',1.324e15],['アップルの時価総額',5.2e14]];
+  const LM=[['人',1.7],['キリン',5.5],['奈良の大仏',15],['東京タワー',333],['スカイツリー',634],['富士山',3776],['エベレスト',8849],['旅客機の高度',1e4],['成層圏',5e4],['宇宙の境界',1e5],['国際宇宙ステーション',4e5],['地球の直径',1.2742e7],['月まで',3.844e8]];
+  const yen=n=>{if(n>=1e12)return (n/1e12).toPrecision(3).replace(/\.?0+$/,'')+'兆円';if(n>=1e8)return (n/1e8).toPrecision(3).replace(/\.?0+$/,'')+'億円';if(n>=1e4)return Math.round(n/1e4).toLocaleString()+'万円';return Math.round(n).toLocaleString()+'円';};
+  const len=m=>{if(m>=1e3)return (m/1e3).toLocaleString('ja-JP',{maximumFractionDigits:m>=1e5?0:1})+' km';if(m>=1)return m.toLocaleString('ja-JP',{maximumFractionDigits:m>=100?0:1})+' m';if(m>=0.01)return (m*100).toFixed(1)+' cm';return (m*1000).toFixed(2)+' mm';};
+  const kg=k=>{if(k>=1e6)return (k/1e3).toLocaleString('ja-JP',{maximumFractionDigits:0})+' t';if(k>=1e3)return (k/1e3).toLocaleString('ja-JP',{maximumFractionDigits:1})+' t';if(k>=1)return k.toLocaleString('ja-JP',{maximumFractionDigits:1})+' kg';return (k*1000).toFixed(0)+' g';};
+  $('presets').innerHTML=PRE.map((p,i)=>`<button class="pre" type="button" data-i="${i}" aria-pressed="false"><span>${p[0]}</span><b>${yen(p[1])}</b></button>`).join('');
+  let amount=4.6e6, anim=null, label='平均給与（年）';
+  $('presets').addEventListener('click',e=>{const b=e.target.closest('.pre');if(!b)return;[...$('presets').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));amount=PRE[+b.dataset.i][1];label=PRE[+b.dataset.i][0];$('amt').value='';run();});
+  $('go').addEventListener('click',()=>{const v=+$('amt').value*+$('unit').value;if(v>0){amount=v;label=yen(v);[...$('presets').children].forEach(x=>x.setAttribute('aria-pressed','false'));run();}});
+  const cv=$('cv'), ctx=cv.getContext('2d');
+  function draw(H,Hfinal){
+    const W=cv.width, Hc=cv.height; const pad=70;
+    const top=Math.max(3,Hfinal*1.6); const yOf=m=>Hc-pad-(Math.log10(Math.max(m,0.1))-Math.log10(0.1))/(Math.log10(top)-Math.log10(0.1))*(Hc-pad*2);
+    // 空: 高さに応じて暗く
+    const g=ctx.createLinearGradient(0,0,0,Hc); const k=Math.min(1,Math.log10(top)/6); g.addColorStop(0,k>0.6?'#0b1026':'#2a5b9c'); g.addColorStop(1,'#9fd3ff'); ctx.fillStyle=g; ctx.fillRect(0,0,W,Hc);
+    if(k>0.5){ctx.fillStyle='rgba(255,255,255,.7)';for(let i=0;i<80;i++){ctx.fillRect((i*127)%W,(i*311)%(Hc*0.6),1.5,1.5);}}
+    ctx.fillStyle='#6d8a4c'; ctx.fillRect(0,Hc-pad,W,pad);
+    // 目盛
+    ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='500 18px "Zen Kaku Gothic New",sans-serif'; ctx.textAlign='right';
+    for(let e=0;e<=9;e++){const m=Math.pow(10,e);if(m>top)break;const y=yOf(m);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();ctx.fillText(len(m),W-16,y-6);}
+    // 比較対象
+    ctx.textAlign='left'; ctx.font='700 20px "Zen Kaku Gothic New",sans-serif';
+    LM.forEach(([n,m],i)=>{ if(m>top) return; const y=yOf(m); ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.moveTo(220,y); ctx.lineTo(W-150,y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle=m<=H?'#ffd966':'rgba(255,255,255,.85)'; ctx.fillText(`${n} ${len(m)}`,230,y-6); });
+    // 札束
+    const y=yOf(H); const x0=90,w=110; const grad=ctx.createLinearGradient(x0,0,x0+w,0); grad.addColorStop(0,'#b9a05a'); grad.addColorStop(.5,'#e3cf8a'); grad.addColorStop(1,'#a98f4a'); ctx.fillStyle=grad; ctx.fillRect(x0,y,w,Hc-pad-y);
+    ctx.fillStyle='rgba(0,0,0,.12)'; for(let yy=y;yy<Hc-pad;yy+=7){ctx.fillRect(x0,yy,w,1);} 
+    ctx.fillStyle='#fff'; ctx.font='400 26px "Mochiy Pop One",sans-serif'; ctx.textAlign='left'; ctx.fillText(len(H),x0+w+14,Math.max(y+30,40));
+  }
+  function run(){
+    const sheets=amount/1e4, Hf=sheets*1e-4, kgs=sheets*1e-3, area=sheets*0.076*0.16;
+    const t0=performance.now(), dur=2600; if(anim) cancelAnimationFrame(anim);
+    const step=t=>{const kk=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-kk,3);draw(Math.max(1e-4,Hf*e),Hf);$('cap').innerHTML=`${label}<small>${sheets>=1?Math.round(sheets).toLocaleString()+' 枚の1万円札':'1万円札 1枚未満'}</small>`;if(kk<1)anim=requestAnimationFrame(step);};
+    anim=requestAnimationFrame(step);
+    let below=null,above=null; for(const l of LM){ if(l[1]<=Hf) below=l; else { above=l; break; } }
+    const cmp= below? `${below[0]}の ${(Hf/below[1]).toLocaleString('ja-JP',{maximumFractionDigits:Hf/below[1]>=10?0:1})} 倍` : (above?`${above[0]}の ${(Hf/above[1]*100).toFixed(1)}%`:'');
+    const elephants=kgs/6000, domes=area/46755;
+    $('kpis').innerHTML=[['高さ',len(Hf),cmp],['枚数',sheets>=1?Math.round(sheets).toLocaleString()+' 枚':'1枚未満',''],['重さ',kg(kgs),elephants>=1?`象 ${elephants.toLocaleString('ja-JP',{maximumFractionDigits:elephants>=10?0:1})} 頭分`:kgs>=60?'大人1人分くらい':''],['敷き詰めると',area>=1e6?(area/1e6).toLocaleString('ja-JP',{maximumFractionDigits:1})+' km²':area.toLocaleString('ja-JP',{maximumFractionDigits:1})+' m²',domes>=1?`東京ドーム ${domes.toLocaleString('ja-JP',{maximumFractionDigits:domes>=10?0:1})} 個分`:'']].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+    const text=`${label}（${yen(amount)}）を1万円札で積むと…\n高さ ${len(Hf)}（${cmp}）\n重さ ${kg(kgs)}\n#札束タワー`;
+    $('share').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+  }
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('share').value).then(()=>{$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1500);}).catch(()=>$('share').select());});
+  [...$('presets').children][1].setAttribute('aria-pressed','true'); run();
+})();
+</script>
+</head><body></body></html>

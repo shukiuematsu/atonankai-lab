@@ -1,0 +1,190 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/rank.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="80億人中、何位？"><meta property="og:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/rank.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="80億人中、何位？"><meta name="twitter:description" content="時間を大切にするための、小さなブラウザアプリ集。無料・登録不要・データは端末の中だけ。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>80億人中、何位？</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+/* 布置: 選挙ポスター級の太い数字と、100人の村のドット。左寄せ、余白は詰めめ。 */
+:root{
+  --bg:#f1f3f8; --paper:#ffffff; --fg:#0f1530; --mute:#5c6480; --line:#d9dde8;
+  --accent:#1f49ff; --accent-ink:#ffffff; --dot:#d5d9e6; --dot-on:#1f49ff; --you:#ff5a36;
+  --display:"Dela Gothic One","Hiragino Sans",sans-serif; --body:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0a0f24; --paper:#121934; --fg:#eef1ff; --mute:#9aa3c7; --line:#283158;
+  --accent:#5b7bff; --accent-ink:#0a0f24; --dot:#283158; --dot-on:#5b7bff; --you:#ff7a5c; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0a0f24; --paper:#121934; --fg:#eef1ff; --mute:#9aa3c7; --line:#283158;
+  --accent:#5b7bff; --accent-ink:#0a0f24; --dot:#283158; --dot-on:#5b7bff; --you:#ff7a5c; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px}
+.wrap{max-width:760px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.2em;color:var(--mute);font-weight:700}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(36px,9vw,64px);line-height:1.1;margin:4px 0 8px;letter-spacing:.01em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--mute);max-width:36em;margin:0 0 24px;font-size:15px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px 20px}
+form{display:grid;gap:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px 18px}
+label{display:grid;gap:5px;font-size:13px;color:var(--mute);font-weight:700}
+.in{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:8px;padding:0 10px;background:var(--bg)}
+.in:focus-within{border-color:var(--accent)}
+input,select{font:inherit;font-size:17px;color:var(--fg);background:transparent;border:0;padding:9px 0;min-width:0;width:100%;font-weight:500}
+input:focus,select:focus{outline:none}
+.unit{font-size:13px;color:var(--mute);white-space:nowrap}
+.go{font-family:var(--display);font-size:18px;padding:14px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;cursor:pointer;letter-spacing:.05em}
+.go:focus-visible,.btn:focus-visible{outline:3px solid var(--you);outline-offset:2px}
+.hint{font-size:12px;color:var(--mute)}
+#result{margin-top:36px;display:grid;gap:28px}
+.twin{background:var(--fg);color:var(--bg);border-radius:12px;padding:26px 22px}
+.twin .k{font-size:13px;letter-spacing:.15em;opacity:.8}
+.twin .n{font-family:var(--display);font-size:clamp(44px,12vw,96px);line-height:1.05;font-variant-numeric:tabular-nums}
+.twin .n small{font-size:.35em;margin-left:.1em}
+.twin .s{opacity:.8;font-size:13px;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.item{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 16px 14px;display:grid;gap:8px;min-width:0}
+.item .t{font-size:13px;font-weight:700;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.item .t span:last-child{font-weight:500}
+.item .big{font-family:var(--display);font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums}
+.item .big small{font-size:16px;font-family:var(--body);font-weight:700;color:var(--mute);margin-left:4px}
+.item .rank{font-size:14px;font-weight:700}
+.item .rank b{color:var(--accent);font-variant-numeric:tabular-nums}
+.village{display:grid;grid-template-columns:repeat(20,1fr);gap:3px}
+.village i{display:block;aspect-ratio:1;border-radius:50%;background:var(--dot)}
+.village i.on{background:var(--dot-on)}
+.village i.you{background:var(--you);transform:scale(1.35)}
+.item .src{font-size:11px;color:var(--mute);line-height:1.5}
+.share{display:grid;gap:12px}
+h2{font-family:var(--display);font-weight:400;font-size:20px;margin:0}
+textarea{font:inherit;font-size:14px;width:100%;min-height:170px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--fg);padding:12px;resize:vertical}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:8px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--fg);color:var(--bg)}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:14px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">WORLD POPULATION 8,260,000,000</div>
+  <h1>80億人中、<em>何位？</em></h1>
+  <p class="lead">年収、身長、睡眠、行った国の数。8つの項目で、あなたが人類のどのあたりにいるかを推定します。最後に「あなたと同じ条件の人が世界に何人いるか」も。</p>
+
+  <div class="card">
+    <form id="f">
+      <div class="row">
+        <label>年齢<div class="in"><input type="number" id="age" value="34" min="0" max="110" inputmode="numeric"><span class="unit">歳</span></div></label>
+        <label>性別（身長の比較に使用）<div class="in"><select id="sex"><option value="m">男性</option><option value="f">女性</option><option value="a">答えない</option></select></div></label>
+        <label>身長<div class="in"><input type="number" id="height" value="171" min="100" max="230" inputmode="numeric"><span class="unit">cm</span></div></label>
+        <label>年収（税込）<div class="in"><input type="number" id="income" value="480" min="0" max="100000" step="10" inputmode="numeric"><span class="unit">万円</span></div></label>
+        <label>睡眠時間<div class="in"><input type="number" id="sleep" value="6.5" min="0" max="16" step="0.5" inputmode="decimal"><span class="unit">時間/日</span></div></label>
+        <label>スマホを見る時間<div class="in"><input type="number" id="phone" value="4" min="0" max="24" step="0.5" inputmode="decimal"><span class="unit">時間/日</span></div></label>
+        <label>行ったことのある国（居住国以外）<div class="in"><input type="number" id="countries" value="3" min="0" max="195" inputmode="numeric"><span class="unit">か国</span></div></label>
+        <label>日常会話ができる言語<div class="in"><select id="langs"><option value="1">1つ</option><option value="2">2つ</option><option value="3">3つ</option><option value="4">4つ以上</option></select></div></label>
+        <label>最終学歴<div class="in"><select id="edu"><option value="0">小学校まで</option><option value="1">中学校</option><option value="2" >高校</option><option value="3">短大・専門学校</option><option value="4" selected>大学</option><option value="5">大学院</option></select></div></label>
+      </div>
+      <button class="go" type="submit">順位を見る</button>
+      <div class="hint">データは端末内だけで計算します。初期値は例です。</div>
+    </form>
+  </div>
+
+  <div id="result" hidden>
+    <div class="twin">
+      <div class="k">あなたと同じ条件の人は、世界に</div>
+      <div class="n"><span id="twin">—</span><small id="twinunit">人</small></div>
+      <div class="s" id="twinsub"></div>
+    </div>
+    <div class="grid" id="items"></div>
+    <section class="share">
+      <h2>結果を残す</h2>
+      <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">コピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+    </section>
+    <p class="foot">推定方法：世界人口は国連 World Population Prospects 2024 の2026年推計（約82.6億人）。年齢分布は同推計、身長は NCD-RisC 2019 の成人平均と標準偏差、年収は World Inequality Database の成人所得分布を対数正規分布で近似（1国際ドル＝100円で換算、税引前・資本所得込み）、睡眠は大規模ウェアラブル調査の平均7.1時間・標準偏差1.0時間、スマホは DataReportal 2025（利用者は人口の59%、利用者の中央値3.5時間）、渡航国数はパスポート保有率と UN Tourism の国際旅行者数からの推計、言語数と学歴は一般に引用される世界推計値。「同じ条件の人数」は各項目を独立と仮定した掛け算で、実際は項目間に相関があるため目安です。</p>
+  </div>
+</div>
+<div class="toast" id="toast">コピーしました</div>
+
+<script>
+(function(){
+  const POP=8.26e9, ADULT=POP*0.74;
+  const $=id=>document.getElementById(id);
+  // 標準正規CDF
+  function Phi(z){const t=1/(1+0.2316419*Math.abs(z));const d=0.3989423*Math.exp(-z*z/2);let p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p;}
+  const AGE=[[0,0],[5,.082],[10,.165],[15,.248],[20,.330],[25,.408],[30,.485],[35,.558],[40,.625],[45,.686],[50,.742],[55,.794],[60,.842],[65,.885],[70,.922],[75,.952],[80,.975],[85,.989],[90,.996],[100,1],[120,1]];
+  function ageCDF(a){for(let i=0;i<AGE.length-1;i++){const [x0,y0]=AGE[i],[x1,y1]=AGE[i+1];if(a>=x0&&a<=x1)return y0+(y1-y0)*(a-x0)/(x1-x0);}return 1;}
+  const H={m:[171,7.5],f:[159,7]};
+  function heightCDF(h,s){if(s==='a')return (heightCDF(h,'m')+heightCDF(h,'f'))/2;const [m,sd]=H[s];return Phi((h-m)/sd);}
+  // 所得: 対数正規 median $5,500, sigma 1.5（成人）
+  const INC_MED=5500, INC_SIG=1.5;
+  function incCDF(usd){if(usd<=0)return 0;return Phi(Math.log(usd/INC_MED)/INC_SIG);}
+  function sleepCDF(h){return Phi((h-7.1)/1.0);}
+  const PHONE_USERS=0.59;
+  function phoneCDF(h){if(h<=0)return 0;return (1-PHONE_USERS)+PHONE_USERS*Phi(Math.log(h/3.5)/0.6);}
+  const CTRY=[[0,.62],[1,.12],[4,.13],[9,.08],[19,.035],[49,.013],[195,.002]]; // 上限, 割合
+  function bucket(arr,v){let cum=0;for(const [max,p] of arr){if(v<=max)return {below:cum,share:p};cum+=p;}return {below:1,share:0};}
+  const LANG=[[1,.40],[2,.43],[3,.13],[4,.04]];
+  const EDU=[[0,.37],[1,.23],[2,.25],[3,.06],[4,.07],[5,.02]];
+  const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  function jp(n){ if(n<1)return '1人未満'; if(n<1e4)return fmt(n)+'人'; if(n<1e8)return (n/1e4).toFixed(n<1e5?1:0)+'万人'; return (n/1e8).toFixed(n<1e9?2:1)+'億人'; }
+  function village(pctAbove){ // 100人の村: あなたより上の人をon
+    const above=Math.round(pctAbove*100); let s='';
+    for(let i=0;i<100;i++){ s+= i<above?'<i class="on"></i>': i===above?'<i class="you"></i>':'<i></i>'; }
+    return `<div class="village" aria-hidden="true">${s}</div>`;
+  }
+  function card(title,sub,bigLabel,bigValue,bigUnit,rankLine,pctAbove,src){
+    return `<div class="item"><div class="t"><span>${title}</span><span>${sub}</span></div><div class="big">${bigValue}<small>${bigUnit}</small></div><div class="rank">${rankLine}</div>${village(pctAbove)}<div class="src">${src}</div></div>`;
+  }
+  function calc(){
+    const age=+$('age').value, sex=$('sex').value, h=+$('height').value, inc=+$('income').value*1e4/100, sl=+$('sleep').value, ph=+$('phone').value, ct=+$('countries').value, lg=+$('langs').value, ed=+$('edu').value;
+    const out=[]; const lines=[]; let joint=1;
+    // 年齢
+    { const below=ageCDF(age); const above=1-ageCDF(age+1); const band=ageCDF(age+2)-ageCDF(Math.max(0,age-2)); joint*=band;
+      out.push(card('年齢','人口 82.6億人中','年上の人',(above*100).toFixed(1),'%',`あなたより若い人が <b>${jp(below*POP)}</b>、年上が <b>${jp(above*POP)}</b>`,above,`世界の年齢中央値は 30.9 歳。国連 WPP 2024。`));
+      lines.push(`年齢: 年上の人は人類の ${(above*100).toFixed(0)}%`); }
+    // 身長
+    { const c=heightCDF(h,sex); const above=1-c; const band=heightCDF(h+2,sex)-heightCDF(h-2,sex); joint*=band; const base=ADULT*(sex==='a'?1:0.5);
+      out.push(card('身長',sex==='a'?'成人全体':(sex==='m'?'成人男性':'成人女性')+' 約30億人中','上位',(above*100).toFixed(1),'%',`あなたより高い人は <b>${jp(above*base)}</b>`,above,`世界の成人平均は男性 171cm、女性 159cm。NCD-RisC 2019。`));
+      lines.push(`身長: 上位 ${(above*100).toFixed(0)}%`); }
+    // 年収
+    { const c=incCDF(inc); const above=1-c; const band=inc>0? incCDF(inc*1.25)-incCDF(inc*0.8) : 0.08; joint*=band;
+      const rank=Math.max(1,Math.round(above*ADULT));
+      out.push(card('年収','成人 約61億人中','上位',(above*100).toFixed(above<1?2:1),'%',inc>0?`世界で <b>${fmt(rank)}</b> 番目に高い収入。年収 ${fmt(+$('income').value)}万円は世界の成人の中央値（約55万円）の <b>${(inc/INC_MED).toFixed(1)}</b> 倍`:`収入がない成人も世界には多数います`,above,`World Inequality Database 2024 の成人所得分布を対数正規近似。1国際ドル=100円。`));
+      lines.push(`年収: 世界の上位 ${(above*100).toFixed(1)}%`); }
+    // 睡眠
+    { const c=sleepCDF(sl); const above=1-c; const band=sleepCDF(sl+0.5)-sleepCDF(sl-0.5); joint*=band;
+      out.push(card('睡眠時間','人口 82.6億人中','あなたより長く眠る人',(above*100).toFixed(1),'%',`あなたより短い人は <b>${jp(c*POP)}</b>`,above,`世界平均 7.1 時間、標準偏差 1.0 時間（ウェアラブル大規模調査）。`));
+      lines.push(`睡眠: 人類の ${(c*100).toFixed(0)}% より長く眠る`); }
+    // スマホ
+    { const c=phoneCDF(ph); const above=1-c; const band= ph>0 ? phoneCDF(ph+0.5)-phoneCDF(Math.max(0.01,ph-0.5)) : (1-PHONE_USERS); joint*=band;
+      out.push(card('スマホ時間','人口 82.6億人中','あなたより長く見る人',(above*100).toFixed(1),'%',ph>0?`人類の <b>${((1-PHONE_USERS)*100).toFixed(0)}%</b> はスマホを持っていません。あなたより短い人は <b>${jp(c*POP)}</b>`:`スマホを使わない <b>${jp((1-PHONE_USERS)*POP)}</b> と同じ側です`,above,`スマホ利用者は人口の 59%、利用者の中央値 3.5 時間/日。DataReportal 2025。`));
+      lines.push(`スマホ: 人類の ${(c*100).toFixed(0)}% より長く見る`); }
+    // 渡航国
+    { const b=bucket(CTRY,ct); const above=1-b.below-b.share; joint*=b.share;
+      out.push(card('行った国の数','人口 82.6億人中','上位',(Math.max(above,0.0005)*100).toFixed(1),'%',`人類の <b>62%</b> は一度も自国を出たことがないと推定されます。あなたより多い人は <b>${jp(Math.max(above,0)*POP)}</b>`,Math.max(above,0),`パスポート保有率（世界で約2割）と UN Tourism の国際旅行者数からの推計。`));
+      lines.push(`渡航国数: 上位 ${(Math.max(above,0.0005)*100).toFixed(1)}%`); }
+    // 言語
+    { const b=bucket(LANG,lg); const above=1-b.below-b.share; joint*=b.share;
+      out.push(card('話せる言語','人口 82.6億人中','同じ人数の人',(b.share*100).toFixed(0),'%',`人類の約 <b>60%</b> は2言語以上を話します。あなたより多い人は <b>${jp(Math.max(above,0)*POP)}</b>`,Math.max(above,0),`多言語話者の世界推計（Grosjean ほか）。`));
+      lines.push(`言語: ${lg>=4?'4つ以上':lg+'つ'}（人類の ${(b.share*100).toFixed(0)}% と同じ）`); }
+    // 学歴
+    { const b=bucket(EDU,ed); const above=1-b.below-b.share; joint*=b.share;
+      out.push(card('最終学歴','成人 約61億人中','あなたより上の学歴',(Math.max(above,0)*100).toFixed(0),'%',`大学を出た人は世界の成人の <b>9%</b>。あなたと同じ学歴は <b>${jp(b.share*ADULT)}</b>`,Math.max(above,0),`Barro-Lee / Our World in Data の25歳以上の教育達成度からの概算。`));
+      lines.push(`学歴: 上の学歴の人は ${(Math.max(above,0)*100).toFixed(0)}%`); }
+    $('items').innerHTML=out.join('');
+    const twin=joint*POP;
+    let tw,unit='人';
+    if(twin<1){tw='あなた';unit='だけ';} else if(twin<1e4){tw=fmt(twin);} else if(twin<1e8){tw=(twin/1e4).toFixed(twin<1e5?1:0);unit='万人';} else {tw=(twin/1e8).toFixed(1);unit='億人';}
+    $('twin').textContent=tw; $('twinunit').textContent=unit;
+    $('twinsub').textContent= twin<1 ? '8項目すべてが同じ人は、推定では1人もいません。' : `年齢±2歳、身長±2cm、年収±20%、睡眠・スマホ±30分、渡航・言語・学歴は同じ区分の人。人類の ${(joint*100).toPrecision(2)}% です。`;
+    const text=[`80億人中、私は…`,...lines,`同じ条件の人は世界に ${twin<1?'私だけ':tw+unit}。`,`#80億人中何位`].join('\n');
+    $('sharetext').value=text;
+    $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    $('result').hidden=false;
+  }
+  $('f').addEventListener('submit',e=>{e.preventDefault();calc();$('result').scrollIntoView({behavior:'smooth'});});
+  $('copy').addEventListener('click',()=>{const t=$('sharetext');const show=()=>{$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1500)};navigator.clipboard&&navigator.clipboard.writeText(t.value).then(show).catch(()=>{t.select();show();});});
+  calc();
+})();
+</script>
+</head><body></body></html>

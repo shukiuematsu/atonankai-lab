@@ -1,0 +1,341 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="桜を見るのは、週末は、親に会えるのは、あと何回か。厚生労働省の簡易生命表から残りの回数を数えます。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/ato-nankai.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="あと何回"><meta property="og:description" content="桜を見るのは、週末は、親に会えるのは、あと何回か。厚生労働省の簡易生命表から残りの回数を数えます。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/ato-nankai.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="あと何回"><meta name="twitter:description" content="桜を見るのは、週末は、親に会えるのは、あと何回か。厚生労働省の簡易生命表から残りの回数を数えます。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>あと何回</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 夜の帯から始まり、紙の上を章ごとに下りていく。数字は明朝、説明はゴシック。 */
+:root{
+  --bg:#edeef1; --paper:#f8f8f6; --fg:#1c2230; --mute:#6b7281; --line:#d3d6dd;
+  --accent:#c9566f; --accent-soft:#f3d9df; --lived:#1c2230; --left:#d8dbe2; --now:#c9566f;
+  --night:#0f1422; --night2:#1c2238; --night-fg:#ece7da; --night-mute:#9aa0b0; --petal:#e58aa3;
+  --ph0:#b9c3d6; --ph1:#8fa3c4; --ph2:#5c7399; --ph3:#2e3f5e;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246;
+  --accent:#e58aa3; --accent-soft:#3a2430; --lived:#ece7da; --left:#2b3246; --now:#e58aa3;
+  --ph0:#2b3650; --ph1:#3d4d70; --ph2:#5c7399; --ph3:#8fa3c4; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246;
+  --accent:#e58aa3; --accent-soft:#3a2430; --lived:#ece7da; --left:#2b3246; --now:#e58aa3;
+  --ph0:#2b3650; --ph1:#3d4d70; --ph2:#5c7399; --ph3:#8fa3c4; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.7;padding-block:0 72px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:720px;margin:0 auto}
+/* 夜の帯 */
+.night{background:linear-gradient(180deg,var(--night),var(--night2));color:var(--night-fg);position:relative;overflow:hidden;padding-block:40px 44px}
+#petals{position:absolute;inset:0;pointer-events:none;opacity:.9}
+.night .wrap{position:relative}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,7vw,54px);letter-spacing:.08em;margin:0;line-height:1.2}
+.lead{color:var(--night-mute);margin:10px 0 0;font-size:15px;max-width:34em}
+.live{margin-top:28px;display:grid;gap:4px}
+.live .k{font-size:13px;letter-spacing:.15em;color:var(--night-mute)}
+.live .n{font-family:var(--display);font-weight:700;font-size:clamp(36px,8.5vw,68px);line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:.01em;word-break:break-all}
+.live .n small{font-size:.4em;color:var(--night-mute);margin-left:.2em;letter-spacing:.1em}
+.live .s{font-size:13px;color:var(--night-mute)}
+/* 入力 */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px 20px;margin-top:-22px;position:relative;z-index:1}
+form{display:grid;gap:18px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+label{display:grid;gap:6px;font-size:13px;color:var(--mute);letter-spacing:.04em}
+input[type=date],input[type=number],input[type=text],select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:6px 2px;border-radius:0;min-width:0;width:100%}
+input:focus,select:focus{outline:none;border-bottom-color:var(--accent)}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:14px;padding:8px 0;background:transparent;color:var(--mute);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--fg);color:var(--paper)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+h3{font-family:var(--display);font-size:15px;letter-spacing:.15em;margin:0;color:var(--mute);font-weight:700}
+.people{display:grid;gap:10px}
+.pr{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:10px;align-items:end}
+@media (max-width:520px){.pr{grid-template-columns:1fr 1fr;}.pr .del{grid-column:2;justify-self:end}}
+.del{font:inherit;font-size:12px;background:none;border:1px solid var(--line);color:var(--mute);border-radius:3px;padding:6px 10px;cursor:pointer}
+.add{font:inherit;font-size:13px;font-weight:700;background:none;border:1px dashed var(--line);color:var(--fg);border-radius:3px;padding:9px;cursor:pointer}
+.go{font:inherit;font-weight:700;font-size:16px;letter-spacing:.2em;padding:14px;background:var(--accent);color:#fff;border:0;border-radius:3px;cursor:pointer}
+.go:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.hint{font-size:12px;color:var(--mute)}
+/* 章 */
+#result{margin-top:44px;display:grid;gap:56px}
+.ch{display:grid;gap:14px}
+.ch .eyebrow{font-size:12px;letter-spacing:.3em;color:var(--mute)}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,4.5vw,28px);letter-spacing:.08em;margin:0;line-height:1.3}
+.rv{transition:opacity .8s ease,transform .8s ease}
+.rv.hide{opacity:0;transform:translateY(14px)}
+.hero .n{font-family:var(--display);font-size:clamp(72px,20vw,140px);line-height:1;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hero .n small{font-size:.3em;letter-spacing:.1em;margin-left:.15em;font-weight:700}
+.hero .sub{color:var(--mute);font-size:15px}
+.hero .last{font-family:var(--display);font-size:18px;margin-top:4px}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.c{background:var(--paper);padding:16px 14px;min-width:0}
+.c .k{font-size:12px;color:var(--mute);letter-spacing:.08em}
+.c .n{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.c .n small{font-size:14px;font-family:var(--body);font-weight:500;color:var(--mute);margin-left:4px}
+.c .s{font-size:12px;color:var(--mute);margin-top:4px}
+.ppl{display:grid;gap:14px}
+.p{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;padding:18px 0;border-top:1px solid var(--line)}
+.p:last-child{border-bottom:1px solid var(--line)}
+.p .who{font-family:var(--display);font-size:22px;font-weight:700;white-space:nowrap;min-width:3.5em}
+.p .who small{display:block;font-size:12px;font-family:var(--body);color:var(--mute);font-weight:400}
+.p .big{font-family:var(--display);font-size:clamp(34px,8vw,48px);color:var(--accent);line-height:1.1;font-variant-numeric:tabular-nums}
+.p .big small{font-size:.4em;color:var(--fg);margin-left:.1em}
+.p .d{font-size:14px;color:var(--mute);margin-top:4px}
+.p .d b{color:var(--fg);font-weight:700}
+.p .sub2{font-size:13px;margin-top:6px;padding:8px 10px;background:var(--accent-soft);border-radius:3px}
+.custom{display:grid;gap:8px}
+.cu{display:grid;grid-template-columns:1.4fr .8fr auto;gap:10px;align-items:end}
+.cu .out{font-family:var(--display);font-size:22px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.weeks{display:grid;grid-template-columns:repeat(52,1fr);gap:2px}
+.weeks i{display:block;aspect-ratio:1;border-radius:1px;background:var(--left);position:relative}
+.weeks i.l{background:var(--lived)}
+.weeks i.now{background:var(--now);box-shadow:0 0 0 1.5px var(--now)}
+.weeks i.ph0.l{background:var(--ph0)}.weeks i.ph1.l{background:var(--ph1)}.weeks i.ph2.l{background:var(--ph2)}.weeks i.ph3.l{background:var(--ph3)}
+.weeks i.mk{background:var(--accent)!important;box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--accent);z-index:1;border-radius:50%}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--left)}
+.legend .a::before{background:var(--ph0)}.legend .b::before{background:var(--ph1)}.legend .c::before{background:var(--ph2)}.legend .d::before{background:var(--ph3)}.legend .nw::before{background:var(--now)}.legend .mk::before{background:var(--accent);border-radius:50%}
+.marks{display:grid;gap:4px;font-size:13px}
+.marks div b{font-family:var(--display)}
+.letter textarea{font:inherit;font-size:15px;line-height:1.9;width:100%;min-height:130px;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:14px;resize:vertical}
+.imgwrap{display:grid;gap:12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--line);border-radius:3px;background:transparent;color:var(--mute);cursor:pointer}
+.tab[aria-pressed=true]{background:var(--fg);color:var(--paper);border-color:var(--fg)}
+.cardimg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);background:#0f1422}
+.cardimg.sq{max-width:440px}
+.steps{display:grid;gap:4px;font-size:13px;color:var(--mute);counter-reset:s}
+.steps div::before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--fg);color:var(--paper);font-size:11px;margin-right:8px;vertical-align:1px}
+textarea.sh{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:170px;resize:vertical;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 18px;border-radius:3px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.btn.line{border-color:#06c755;color:#06c755}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.rv.hide{opacity:1;transform:none}}
+</style>
+
+<header class="night gut">
+  <canvas id="petals" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <h1>あと何回</h1>
+    <p class="lead">桜を見るのは、週末は、親に会えるのは、犬と散歩するのは、あと何回か。厚生労働省の簡易生命表から、残りの回数を数えます。</p>
+    <div class="live"><div class="k" id="livek">残り時間</div><div class="n"><span id="secs">—</span><small>秒</small></div><div class="s" id="lives"></div></div>
+  </div>
+</header>
+
+<main class="gut"><div class="wrap">
+  <div class="card">
+    <form id="f">
+      <div class="row">
+        <label>お名前（任意・画像に入ります）<input type="text" id="name" placeholder="例：ゆうき" maxlength="12" autocomplete="off"></label>
+        <label>生年月日<input type="date" id="dob" value="1990-04-01" min="1920-01-01" max="2026-12-31" required></label>
+        <label>性別（生命表の区分）
+          <div class="seg" id="sex" role="group" aria-label="性別"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button><button type="button" data-v="a" aria-pressed="false">平均</button></div>
+        </label>
+      </div>
+      <h3>大切な人・ペット</h3>
+      <div class="people" id="people"></div>
+      <button class="add" type="button" id="addp">＋ 追加する（祖父母・パートナー・子ども・犬・猫・友人）</button>
+      <h3>あなたの「あと何回」</h3>
+      <div class="custom" id="custom"></div>
+      <button class="add" type="button" id="addc">＋ 好きなことを追加（ライブ、温泉、帰省…）</button>
+      <button class="go" type="submit">数える</button>
+      <div class="hint">入力はこの端末の中だけで計算され、どこにも送信されません。初期値は例です。</div>
+    </form>
+  </div>
+
+  <div id="result" hidden>
+    <section class="ch hero rv">
+      <div class="eyebrow">一　季節</div>
+      <div class="k" style="font-size:14px;color:var(--mute);letter-spacing:.1em">桜を見られるのは、あと</div>
+      <div class="n"><span id="sakura">0</span><small>回</small></div>
+      <div class="last" id="lastsakura"></div>
+      <div class="sub" id="herosub"></div>
+      <div class="counts" id="seasons"></div>
+    </section>
+
+    <section class="ch rv" id="pplsec">
+      <div class="eyebrow">二　人</div>
+      <h2 id="pplh">会える回数</h2>
+      <div class="ppl" id="ppl"></div>
+      <p class="hint">相手の平均余命と、あなた自身の平均余命の短い方 × 会う回数。1回を6時間として日数に換算。子どもは18歳で家を出るとして、一緒に暮らす残りを数えています。犬は平均寿命14.6歳、猫は15.8歳（ペットフード協会 2024）。</p>
+    </section>
+
+    <section class="ch rv">
+      <div class="eyebrow">三　日々</div>
+      <h2>繰り返しているうちに、終わるもの</h2>
+      <div class="counts" id="daily"></div>
+      <div class="custom" id="customout"></div>
+    </section>
+
+    <section class="ch rv">
+      <div class="eyebrow">四　週</div>
+      <h2>人生を週で見る</h2>
+      <div class="weeks" id="weeks" aria-label="人生の週のグリッド"></div>
+      <div class="legend"><span class="a">0–6歳</span><span class="b">学校</span><span class="c">働く</span><span class="d">65歳から</span><span class="nw">今週</span><span>残り</span><span class="mk">大切な人の平均余命が尽きる週</span></div>
+      <div class="marks" id="marks"></div>
+      <div class="pct" id="pct" style="font-family:var(--display);font-size:16px"></div>
+    </section>
+
+    <section class="ch letter rv" id="lettersec">
+      <div class="eyebrow">五　手紙</div>
+      <h2>この数字を見て、誰かに連絡したくなったら</h2>
+      <textarea id="letter" aria-label="送るメッセージ"></textarea>
+      <div class="btns"><button class="btn primary" id="copyletter" type="button">文章をコピー</button><a class="btn line" id="linelink" href="#" target="_blank" rel="noopener">LINEで送る</a></div>
+      <p class="hint">送り先はあなたが選びます。このページは誰にも何も送りません。</p>
+    </section>
+
+    <section class="ch imgwrap rv">
+      <div class="eyebrow">六　画像</div>
+      <h2>結果を画像にする</h2>
+      <div class="tabs" id="kind" role="group" aria-label="画像の種類"><button class="tab" type="button" data-k="sakura" aria-pressed="true">桜</button><button class="tab" type="button" data-k="people" aria-pressed="false">人</button><button class="tab" type="button" data-k="weeks" aria-pressed="false">週</button></div>
+      <div class="tabs" id="fmt" role="group" aria-label="画像の形"><button class="tab" type="button" data-f="wide" aria-pressed="true">X・横長 1200×630</button><button class="tab" type="button" data-f="square" aria-pressed="false">正方形 1080×1080</button></div>
+      <img class="cardimg" id="cardimg" alt="結果画像のプレビュー" width="1200" height="630">
+      <canvas id="cardcv" hidden></canvas>
+      <div class="btns"><button class="btn primary" id="copyimg" type="button">画像をコピー</button><button class="btn" id="dlimg" type="button">画像を保存</button></div>
+      <div class="steps"><div>「画像をコピー」を押す（できない端末では画像を長押し／右クリックで保存）</div><div>下の「Xに投稿」を押し、投稿画面に画像を貼り付ける</div></div>
+    </section>
+
+    <section class="ch rv">
+      <div class="eyebrow">七　言葉</div>
+      <h2>文章で残す</h2>
+      <textarea class="sh" id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">文章をコピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+    </section>
+
+    <p class="foot rv">計算根拠：厚生労働省「令和5年簡易生命表」の年齢別平均余命（5歳刻みを線形補間）。「平均」は男女の中間値。満月は1年に12.37回、週末は52.18回。犬猫の平均寿命は一般社団法人ペットフード協会「2024年 全国犬猫飼育実態調査」。子どもと過ごす時間の大半が12歳までに終わるという指摘は、米国 American Time Use Survey をもとにした分析（Our World in Data）によります。個人の健康状態は反映していません。数字は目安であり、予言ではありません。</p>
+  </div>
+</div></main>
+<div class="toast" id="toast">コピーしました</div>
+
+<script>
+(function(){
+  const LE={m:{0:81.09,5:76.31,10:71.34,15:66.37,20:61.39,25:56.56,30:51.68,35:46.85,40:42.06,45:37.32,50:32.63,55:28.05,60:23.68,65:19.52,70:15.56,75:11.89,80:8.61,85:5.98,90:4.16,95:2.90,100:2.00,110:1.2},
+            f:{0:87.14,5:82.33,10:77.35,15:72.38,20:67.39,25:62.47,30:57.56,35:52.68,40:47.82,45:42.99,50:38.23,55:33.54,60:28.91,65:24.38,70:19.96,75:15.68,80:11.63,85:7.98,90:5.47,95:3.50,100:2.30,110:1.4}};
+  function remain(age,sex){ if(sex==='a') return (remain(age,'m')+remain(age,'f'))/2; const t=LE[sex]; const ks=Object.keys(t).map(Number).sort((a,b)=>a-b); if(age<=0)return t[0]; if(age>=110)return t[110]; let lo=0,hi=110; for(let i=0;i<ks.length-1;i++){if(age>=ks[i]&&age<=ks[i+1]){lo=ks[i];hi=ks[i+1];break;}} return t[lo]+(t[hi]-t[lo])*(age-lo)/(hi-lo); }
+  const KIND={mother:{l:'母',sex:'f',freq:2,unit:'会える',verb:'会う'},father:{l:'父',sex:'m',freq:2,unit:'会える',verb:'会う'},gm:{l:'祖母',sex:'f',freq:1,unit:'会える',verb:'会う'},gf:{l:'祖父',sex:'m',freq:1,unit:'会える',verb:'会う'},partner:{l:'パートナー',sex:'a',freq:365,unit:'一緒に迎える朝',verb:'朝を迎える'},child:{l:'子ども',sex:'a',freq:365,unit:'一緒に夕食を食べられる',verb:'夕食'},friend:{l:'友人',sex:'a',freq:3,unit:'会える',verb:'会う'},dog:{l:'犬',le:14.6,freq:730,unit:'散歩に行ける',verb:'散歩'},cat:{l:'猫',le:15.8,freq:365,unit:'一緒に眠れる夜',verb:'夜'}};
+  const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  const $=id=>document.getElementById(id);
+  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const store={get(k){try{return JSON.parse(localStorage.getItem('atonankai:'+k));}catch(e){return null;}},set(k,v){try{localStorage.setItem('atonankai:'+k,JSON.stringify(v));}catch(e){}}};
+  let sex='m', S=null, kind='sakura', fmtSel='wide', people=[{k:'mother',age:62,freq:2},{k:'father',age:65,freq:2},{k:'child',age:5,freq:365}], custom=[{n:'ライブ',f:3},{n:'温泉',f:2}];
+  const saved=store.get('v3'); if(saved){ $('dob').value=saved.dob||$('dob').value; $('name').value=saved.name||''; sex=saved.sex||'m'; if(Array.isArray(saved.people))people=saved.people; if(Array.isArray(saved.custom))custom=saved.custom; }
+  [...$('sex').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===sex));
+  $('sex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sex=b.dataset.v;[...$('sex').children].forEach(x=>x.setAttribute('aria-pressed',x===b));});
+  // 人の入力
+  function renderPeople(){ $('people').innerHTML=people.map((p,i)=>{const K=KIND[p.k];const isPet=!!K.le;const isChild=p.k==='child';return `<div class="pr"><label>だれ<select data-i="${i}" data-f="k">${Object.entries(KIND).map(([k,v])=>`<option value="${k}" ${k===p.k?'selected':''}>${v.l}</option>`).join('')}</select></label><label>${isPet?'年齢':'今の年齢'}<input type="number" data-i="${i}" data-f="age" value="${p.age}" min="0" max="110" step="${isPet?'0.5':'1'}" inputmode="decimal"></label><label>${isChild?'一緒に夕食／年':isPet?(p.k==='dog'?'散歩／年':'一緒に寝る夜／年'):p.k==='partner'?'一緒の朝／年':'会う回数／年'}<input type="number" data-i="${i}" data-f="freq" value="${p.freq}" min="0" max="1000" inputmode="numeric"></label><button class="del" type="button" data-del="${i}" aria-label="削除">削除</button></div>`;}).join(''); }
+  $('people').addEventListener('input',e=>{const t=e.target;const i=+t.dataset.i;if(t.dataset.f==='k'){people[i].k=t.value;people[i].freq=KIND[t.value].freq;if(KIND[t.value].le)people[i].age=Math.min(people[i].age,20);if(t.value==='child')people[i].age=Math.min(people[i].age,17);renderPeople();}else people[i][t.dataset.f]=+t.value;});
+  $('people').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;people.splice(+b.dataset.del,1);renderPeople();});
+  $('addp').addEventListener('click',()=>{const used=people.map(p=>p.k);const next=['partner','child','dog','cat','gm','gf','friend','mother','father'].find(k=>!used.includes(k))||'friend';const def={partner:34,child:5,dog:4,cat:3,gm:86,gf:88,friend:34,mother:62,father:65}[next];people.push({k:next,age:def,freq:KIND[next].freq});renderPeople();});
+  function renderCustom(){ $('custom').innerHTML=custom.map((c,i)=>`<div class="cu"><label>なに<input type="text" data-i="${i}" data-f="n" value="${c.n.replace(/"/g,'&quot;')}" maxlength="14" placeholder="例：ライブ"></label><label>年に何回<input type="number" data-i="${i}" data-f="f" value="${c.f}" min="0" max="1000" inputmode="numeric"></label><button class="del" type="button" data-del="${i}" aria-label="削除">削除</button></div>`).join(''); }
+  $('custom').addEventListener('input',e=>{const t=e.target;const i=+t.dataset.i;custom[i][t.dataset.f]=t.dataset.f==='f'?+t.value:t.value;});
+  $('custom').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;custom.splice(+b.dataset.del,1);renderCustom();});
+  $('addc').addEventListener('click',()=>{if(custom.length>=4)return;custom.push({n:'',f:1});renderCustom();});
+  renderPeople(); renderCustom();
+
+  // ---------- 計算 ----------
+  function nextEvent(month,day){const now=new Date();let d=new Date(now.getFullYear(),month-1,day);if(now>d)d=new Date(now.getFullYear()+1,month-1,day);return {years:(d-now)/(365.25*864e5),year:d.getFullYear()};}
+  function countEvent(R,month,day){const e=nextEvent(month,day);const n=Math.max(0,Math.floor(R-e.years)+1);return {n,last:e.year+n-1,first:e.year};}
+  function compute(){
+    const dob=new Date($('dob').value+'T00:00:00'); if(isNaN(dob)) return null; const now=new Date(); const age=(now-dob)/(365.25*864e5); if(age<0||age>110) return null;
+    const R=remain(age,sex), total=age+R;
+    const sakura=countEvent(R,4,1), summer=countEvent(R,8,1), autumn=countEvent(R,11,15), newyear=countEvent(R,1,1), bday=countEvent(R,dob.getMonth()+1,dob.getDate()), gw=countEvent(R,5,3);
+    const ppl=people.filter(p=>p.age>=0).map(p=>{const K=KIND[p.k]; let their, shared, main, note='', extra='';
+      if(K.le){ their=Math.max(0.3,K.le-p.age); shared=Math.min(their,R); main=shared*p.freq; note=`${K.l}の平均寿命は ${K.le} 歳。あと約 ${their.toFixed(1)} 年。`; }
+      else if(p.k==='child'){ const toLeave=Math.max(0,18-p.age); shared=Math.min(toLeave,R); main=shared*p.freq; their=remain(p.age,'a'); note=`18歳で家を出るとすると、一緒に暮らすのはあと ${fmt(toLeave*365.25)} 日。`; const wk=shared*52.18, wk12=Math.max(0,Math.min(12-p.age,R))*52.18; extra=`一緒に過ごせる週末は、あと <b>${fmt(wk)}</b> 回。${p.age<12?`そのうち12歳までは <b>${fmt(wk12)}</b> 回。親子で過ごす時間の大半は、子どもが12歳になるまでに終わります。`:'子どもが12歳を過ぎると、親と過ごす時間は急に減ります。残りの週末は、数えられる数です。'}`; p.weekends=wk; }
+      else { their=remain(p.age,K.sex); shared=Math.min(their,R); main=shared*p.freq; note=`${K.l}は今 ${p.age} 歳、平均余命は ${their.toFixed(1)} 年。`; }
+      const hours=main*(p.k==='partner'||p.k==='child'||p.k==='cat'?1:p.k==='dog'?0.5:6); return {...p,K,their,shared,main,hours,note,extra,markAge:age+(p.k==='child'?Math.max(0,18-p.age):Math.min(their,R))};
+    });
+    const cust=custom.filter(c=>c.n&&c.f>0).map(c=>({n:c.n,f:c.f,count:R*c.f}));
+    return {age,R,total,pct:age/total*100,sakura,summer,autumn,newyear,bday,gw,ppl,cust,weeks:{total:Math.round(total*52.18),lived:Math.floor(age*52.18)},name:$('name').value.trim(),
+      daily:[['週末',R*52.18,'回','土曜の朝は、あと'],['満月',R*12.37,'回','見上げれば'],['眠る夜',R*365.25,'晩',''],['食事',R*365.25*3,'食','1日3食として'],['給料日',Math.max(0,Math.min(65,total)-age)*12,'回','65歳までとして'],['心臓の鼓動',R*365.25*1440*70,'回','毎分70回として'],['歯みがき',R*365.25*2,'回','朝晩'],['オリンピック',R/4,'大会','夏季のみ']]};
+  }
+  // ---------- 描画 ----------
+  function render(animate){
+    S=compute(); if(!S) return;
+    store.set('v3',{dob:$('dob').value,name:S.name,sex,people,custom});
+    const secs=[...document.querySelectorAll('#result .rv')]; if(animate&&!reduced) secs.forEach(s=>s.classList.add('hide'));
+    $('result').hidden=false;
+    $('lastsakura').textContent=`最後の桜は、${S.sakura.last}年の春。あなたは ${Math.floor(S.age+(S.sakura.last-new Date().getFullYear()))} 歳。`;
+    $('herosub').textContent=`今 ${Math.floor(S.age)} 歳。平均余命はあと ${S.R.toFixed(1)} 年、${fmt(S.R*365.25)} 日。`;
+    $('seasons').innerHTML=[['夏',S.summer,'蝉の声'],['紅葉',S.autumn,'色づく山'],['正月',S.newyear,'年越しそば'],['誕生日',S.bday,'ろうそくを吹く'],['ゴールデンウィーク',S.gw,'連休の朝']].map(([k,e,s])=>`<div class="c"><div class="k">${k}</div><div class="n"><span data-n="${e.n}">${fmt(e.n)}</span><small>回</small></div><div class="s">${s}　最後は ${e.last}年</div></div>`).join('');
+    $('pplsec').hidden=!S.ppl.length;
+    $('ppl').innerHTML=S.ppl.map(p=>`<div class="p"><div class="who">${p.K.l}<small>${p.K.le?p.age+'歳':p.age+'歳'}</small></div><div><div class="big">あと約 <span data-n="${p.main}">${fmt(p.main)}</span><small>回</small></div><div class="d">${p.K.unit}回数。${p.note} 年に ${p.freq} 回として、残りの時間は合計 <b>${p.hours<24?p.hours.toFixed(0)+'時間':p.hours<24*60?(p.hours/24).toFixed(1)+'日':Math.round(p.hours/24)+'日'}</b>。</div>${p.extra?`<div class="sub2">${p.extra}</div>`:''}</div></div>`).join('');
+    $('daily').innerHTML=S.daily.map(([k,n,u,s])=>`<div class="c"><div class="k">${k}</div><div class="n"><span data-n="${n}">${fmt(n)}</span><small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+    $('customout').innerHTML=S.cust.map(c=>`<div class="cu" style="grid-template-columns:1fr auto;border-top:1px solid var(--line);padding-top:10px"><div>${c.n}（年${c.f}回）</div><div class="out">あと ${fmt(c.count)} 回</div></div>`).join('');
+    // 週グリッド
+    const g=$('weeks'); const frag=document.createDocumentFragment(); const marks={}; S.ppl.forEach(p=>{const w=Math.round(p.markAge*52.18); if(w<S.weeks.total){ (marks[w]=marks[w]||[]).push(p.K.l+(p.k==='child'?'が独立':p.K.le?'の寿命':'の平均余命')); }});
+    for(let i=0;i<S.weeks.total;i++){const el=document.createElement('i'); const a=i/52.18; const ph=a<6?'ph0':a<18?'ph1':a<65?'ph2':'ph3'; el.className=ph; if(!animate||reduced){ if(i<S.weeks.lived)el.classList.add('l'); else if(i===S.weeks.lived)el.classList.add('now'); } if(marks[i]){el.classList.add('mk');el.title=marks[i].join('、');} frag.appendChild(el);} g.replaceChildren(frag);
+    $('marks').innerHTML=Object.entries(marks).sort((a,b)=>a[0]-b[0]).map(([w,ls])=>`<div>● <b>${ls.join('、')}</b>：あなたが ${Math.floor(w/52.18)} 歳のころ（今から ${Math.max(0,Math.round(w/52.18-S.age))} 年）</div>`).join('');
+    $('pct').textContent=`${fmt(S.weeks.lived)} 週を過ごし、${fmt(S.weeks.total-S.weeks.lived)} 週が残っている。人生の ${S.pct.toFixed(1)}% 地点。`;
+    // 手紙
+    const par=S.ppl.find(p=>['mother','father','gm','gf'].includes(p.k)); $('lettersec').hidden=!par;
+    if(par){ const call={mother:'お母さん',father:'お父さん',gm:'おばあちゃん',gf:'おじいちゃん'}[par.k]; if(!$('letter').dataset.touched) $('letter').value=`${call}へ。\n今のペースだと、あと${fmt(par.main)}回しか会えないって計算が出た。\n次の連休、帰るね。${par.K.l}の好きなもの、買っていく。`; $('linelink').href='https://line.me/R/share?text='+encodeURIComponent($('letter').value); }
+    // 文章
+    const plines=S.ppl.map(p=>p.k==='child'?`子どもと過ごせる週末は あと${fmt(p.weekends||0)}回、一緒の夕食は あと約${fmt(p.main)}回`:`${p.K.l}と${p.K.verb==='会う'?'会える':p.K.unit}のは あと約${fmt(p.main)}回`);
+    const text=[`${S.name?S.name+'の':'私の'}「あと何回」`,`桜 あと${S.sakura.n}回（最後は${S.sakura.last}年）`,`週末 あと${fmt(S.R*52.18)}回`,...plines,...S.cust.map(c=>`${c.n} あと${fmt(c.count)}回`),`人生の ${S.pct.toFixed(0)}% 地点。`,`#あと何回`].join('\n');
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    if(animate&&!reduced){ $('sakura').textContent='0'; $('result').scrollIntoView({behavior:'smooth',block:'start'}); secs.forEach((s,i)=>setTimeout(()=>s.classList.remove('hide'),200+i*220)); setTimeout(()=>countUp($('sakura'),S.sakura.n,1400),350); setTimeout(()=>{document.querySelectorAll('#result [data-n]').forEach((el,i)=>setTimeout(()=>countUp(el,+el.dataset.n,900),i*50));},700); setTimeout(fillWeeks,1200); petals(12000); }
+    else $('sakura').textContent=S.sakura.n;
+    startLive(); drawCard();
+  }
+  function countUp(el,to,dur){const t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-k,3);el.textContent=fmt(to*e);if(k<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+  function fillWeeks(){const cells=$('weeks').children;const n=S.weeks.lived;const t0=performance.now(),dur=1400;let done=0;const step=t=>{const k=Math.min(1,(t-t0)/dur);const upto=Math.floor(n*(1-Math.pow(1-k,2)));for(;done<upto;done++)cells[done].classList.add('l');if(k<1)requestAnimationFrame(step);else if(cells[n])cells[n].classList.add('now');};requestAnimationFrame(step);}
+  // ライブ残り秒
+  let liveT=null, liveBase=0, liveAt=0;
+  function startLive(){ clearInterval(liveT); liveBase=S.R*365.25*86400; liveAt=Date.now(); const tick=()=>{const s=Math.max(0,liveBase-(Date.now()-liveAt)/1000); $('secs').textContent=Math.floor(s).toLocaleString('ja-JP');}; tick(); liveT=setInterval(tick,1000);
+    const last=store.get('lastVisit'); const today=new Date().toISOString().slice(0,10); $('lives').textContent= last&&last!==today? `前回開いた日から ${Math.round((Date.parse(today)-Date.parse(last))/864e5)} 日。${fmt((Date.parse(today)-Date.parse(last))/1000)} 秒が過ぎました。` : `平均余命の残りを1秒ずつ数えています。1日で 86,400 秒。`; store.set('lastVisit',today); }
+  // 桜
+  let petalRun=null;
+  function petals(ms){ if(reduced) return; const cv=$('petals'),ctx=cv.getContext('2d'); const W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight; const dpr=Math.min(2,window.devicePixelRatio||1); cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
+    const P=Array.from({length:30},()=>({x:Math.random()*W,y:-20-Math.random()*H,r:4+Math.random()*5,vx:.3+Math.random()*.6,vy:.6+Math.random()*1,a:Math.random()*6.28,va:(Math.random()-.5)*.05,ph:Math.random()*6.28}));
+    const t0=performance.now(); if(petalRun)cancelAnimationFrame(petalRun);
+    const step=t=>{ctx.clearRect(0,0,W,H);ctx.fillStyle='#e58aa3';const fade=Math.min(1,(ms-(t-t0))/1500);ctx.globalAlpha=.6*Math.max(0,fade);P.forEach(p=>{p.x+=p.vx+Math.sin(t/900+p.ph)*.5;p.y+=p.vy;p.a+=p.va;if(p.y>H+20){p.y=-20;p.x=Math.random()*W;}ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.beginPath();ctx.ellipse(0,0,p.r,p.r*.62,0,0,6.28);ctx.fill();ctx.restore();});if(t-t0<ms)petalRun=requestAnimationFrame(step);else ctx.clearRect(0,0,W,H);};
+    petalRun=requestAnimationFrame(step); }
+  // ---------- 結果画像 ----------
+  async function drawCard(){
+    if(!S) return; try{await document.fonts.load('800 100px "Shippori Mincho"');await document.fonts.load('500 30px "Zen Kaku Gothic New"');}catch(e){}
+    const wide=fmtSel==='wide'; const W=wide?1200:1080,H=wide?630:1080; const cv=$('cardcv'); cv.width=W;cv.height=H; const x=cv.getContext('2d');
+    const MIN='"Shippori Mincho","Hiragino Mincho ProN",serif', GO='"Zen Kaku Gothic New","Hiragino Sans",sans-serif'; const L=70;
+    const bg=x.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#0f1422'); bg.addColorStop(1,'#1c2238'); x.fillStyle=bg; x.fillRect(0,0,W,H);
+    x.fillStyle='#e58aa3'; for(let i=0;i<14;i++){const px=(i*197)%W,py=(i*331)%H;x.save();x.globalAlpha=.22+(i%4)*.08;x.translate(px,py);x.rotate(i*.9);x.beginPath();x.ellipse(0,0,9+i%5*2,6,0,0,6.28);x.fill();x.restore();} x.globalAlpha=1;
+    const title=S.name?`${S.name}の、あと何回`:'あと何回';
+    const footer=()=>{ x.textAlign='right'; x.fillStyle='#ece7da'; x.font=`700 ${wide?30:36}px ${MIN}`; x.fillText(title,W-60,H-(wide?50:70)); x.fillStyle='#9aa0b0'; x.font=`500 ${wide?18:22}px ${GO}`; x.fillText('#あと何回',W-60,H-(wide?24:36)); x.textAlign='left'; };
+    if(kind==='sakura'){
+      const cols=52,rows=Math.ceil(S.weeks.total/cols),gx=wide?W*0.56:70,gw=wide?W-gx-60:W-140,cell=gw/cols,ch=wide?cell:cell*0.62,gy=wide?60:H-90-rows*ch;
+      for(let i=0;i<S.weeks.total;i++){const c=i%cols,r=Math.floor(i/cols);if(wide&&gy+r*ch>H-60)break;x.fillStyle=i<S.weeks.lived?'rgba(236,231,218,.55)':'rgba(236,231,218,.10)';if(i===S.weeks.lived)x.fillStyle='#e58aa3';x.fillRect(gx+c*cell,gy+r*ch,cell-2,ch-2);}
+      let y=wide?130:150; x.fillStyle='#9aa0b0'; x.font=`500 ${wide?26:30}px ${GO}`; x.fillText('桜を見られるのは、あと',L,y);
+      y+=wide?190:230; x.fillStyle='#ece7da'; x.font=`800 ${wide?210:260}px ${MIN}`; x.fillText(String(S.sakura.n),L,y); const nw=x.measureText(String(S.sakura.n)).width; x.font=`700 ${wide?60:72}px ${MIN}`; x.fillText('回',L+nw+14,y);
+      y+=wide?62:80; x.fillStyle='#ece7da'; x.font=`500 ${wide?28:34}px ${GO}`; x.fillText(`最後の桜は ${S.sakura.last}年 ・ 週末 あと${fmt(S.R*52.18)}回 ・ 正月 あと${S.newyear.n}回`,L,y);
+      if(S.ppl.length){ y+=wide?64:80; x.fillStyle='#e58aa3'; x.font=`700 ${wide?40:50}px ${MIN}`; x.fillText(S.ppl.slice(0,2).map(p=>`${p.K.l}と${p.K.verb==='会う'?'会える':p.K.verb}のは、あと約${fmt(p.main)}回`).join('　'),L,y); }
+      const by=H-(wide?96:140),bw=wide?W*0.5:W-140; x.fillStyle='rgba(236,231,218,.15)'; x.fillRect(L,by,bw,6); x.fillStyle='#e58aa3'; x.fillRect(L,by,bw*S.pct/100,6); x.fillStyle='#9aa0b0'; x.font=`500 ${wide?22:28}px ${GO}`; x.fillText(`人生の ${S.pct.toFixed(0)}% 地点 ・ 今 ${Math.floor(S.age)} 歳`,L,by+(wide?40:48));
+    } else if(kind==='people'){
+      let y=wide?110:130; x.fillStyle='#9aa0b0'; x.font=`500 ${wide?26:30}px ${GO}`; x.fillText('大切な人と、あと何回',L,y); const rows=S.ppl.slice(0,wide?4:6); const step=wide?(H-220)/Math.max(1,rows.length):(H-300)/Math.max(1,rows.length);
+      rows.forEach((p,i)=>{const yy=y+70+i*step; x.fillStyle='#ece7da'; x.font=`700 ${wide?34:40}px ${MIN}`; x.fillText(p.K.l,L,yy+(wide?step*0.55:step*0.55)); x.textAlign='right'; x.fillStyle='#e58aa3'; x.font=`800 ${Math.min(wide?96:110,step*0.8)}px ${MIN}`; x.fillText(fmt(p.k==='child'?(p.weekends||p.main):p.main),W-200,yy+step*0.6); x.fillStyle='#ece7da'; x.font=`700 ${wide?34:40}px ${MIN}`; x.fillText('回',W-130,yy+step*0.6); x.textAlign='left'; x.fillStyle='#9aa0b0'; x.font=`500 ${wide?20:24}px ${GO}`; x.fillText((p.k==='child'?'一緒に過ごせる週末':p.K.unit)+'。'+(p.K.le?`平均寿命 ${p.K.le}歳`:p.k==='child'?'18歳まで':`平均余命 ${p.their.toFixed(0)}年`),L,yy+step*0.6+(wide?34:40)); x.fillStyle='rgba(236,231,218,.12)'; x.fillRect(L,yy+step*0.6+(wide?52:60),W-L-60,1);});
+      if(!rows.length){x.fillStyle='#ece7da';x.font=`700 40px ${MIN}`;x.fillText('大切な人を追加すると、ここに出ます',L,H/2);}
+    } else {
+      const cols=52,rows=Math.ceil(S.weeks.total/cols),gx=L,gw=W-L*2,cell=gw/cols,ch=Math.min(cell,(H-(wide?230:300))/rows),gy=wide?120:150;
+      x.fillStyle='#9aa0b0'; x.font=`500 ${wide?26:30}px ${GO}`; x.fillText(`人生を週で見る ・ ${fmt(S.weeks.lived)}週を過ごし、${fmt(S.weeks.total-S.weeks.lived)}週が残る`,L,wide?80:100);
+      const mk={}; S.ppl.forEach(p=>{const w=Math.round(p.markAge*52.18); if(w<S.weeks.total) mk[w]=p.K.l;});
+      for(let i=0;i<S.weeks.total;i++){const c=i%cols,r=Math.floor(i/cols);const a=i/52.18;const col=i<S.weeks.lived?(a<6?'#b9c3d6':a<18?'#8fa3c4':a<65?'#5c7399':'#3d4d70'):'rgba(236,231,218,.10)';x.fillStyle=col;if(i===S.weeks.lived)x.fillStyle='#e58aa3';x.fillRect(gx+c*cell,gy+r*ch,cell-2,ch-2);}
+      Object.entries(mk).forEach(([w,l])=>{const c=w%cols,r=Math.floor(w/cols);const cx=gx+c*cell+cell/2,cy=gy+r*ch+ch/2;x.fillStyle='#e58aa3';x.beginPath();x.arc(cx,cy,Math.max(5,cell*0.55),0,7);x.fill();x.fillStyle='#ece7da';x.font=`700 ${wide?20:24}px ${MIN}`;x.fillText(l,cx+cell,cy+8);});
+      x.fillStyle='#ece7da'; x.font=`700 ${wide?34:40}px ${MIN}`; x.fillText(`人生の ${S.pct.toFixed(0)}% 地点。${S.ppl.length?'● は大切な人の平均余命が尽きる週。':''}`,L,H-(wide?100:150));
+    }
+    footer(); const url=cv.toDataURL('image/png'); const img=$('cardimg'); img.src=url; img.width=W; img.height=H; img.classList.toggle('sq',!wide);
+  }
+  $('kind').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;kind=b.dataset.k;[...$('kind').children].forEach(x=>x.setAttribute('aria-pressed',x===b));drawCard();});
+  $('fmt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fmtSel=b.dataset.f;[...$('fmt').children].forEach(x=>x.setAttribute('aria-pressed',x===b));drawCard();});
+  function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+  $('copyimg').addEventListener('click',()=>{const cv=$('cardcv');try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;const item=new ClipboardItem({'image/png':new Promise(res=>cv.toBlob(res,'image/png'))});navigator.clipboard.write([item]).then(()=>toast('画像をコピーしました。Xの投稿画面に貼り付けてください')).catch(()=>toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください'));}catch(e){toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください');}});
+  (async()=>{let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){dl=null;} if(!dl){$('dlimg').hidden=true;return;} $('dlimg').addEventListener('click',()=>{$('cardcv').toBlob(async b=>{try{await dl.save({filename:`atonankai-${kind}-${fmtSel}.png`,data:b});toast('保存しました');}catch(e){if(!e||e.code!=='declined')toast('保存できませんでした。画像を長押し／右クリックで保存してください');}},'image/png');});})();
+  $('f').addEventListener('submit',e=>{e.preventDefault();render(true);});
+  $('letter').addEventListener('input',()=>{$('letter').dataset.touched='1';$('linelink').href='https://line.me/R/share?text='+encodeURIComponent($('letter').value);});
+  $('copyletter').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('letter').value).then(()=>toast('コピーしました')).catch(()=>{$('letter').select();toast('選択しました');});});
+  $('copy').addEventListener('click',()=>{const t=$('sharetext');navigator.clipboard&&navigator.clipboard.writeText(t.value).then(()=>toast('コピーしました')).catch(()=>{t.select();toast('選択しました');});});
+  window.addEventListener('resize',()=>{});
+  render(false); petals(9000);
+})();
+</script>
+</head><body></body></html>

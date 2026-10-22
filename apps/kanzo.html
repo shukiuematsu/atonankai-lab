@@ -1,0 +1,209 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="今夜飲む量を入れると、肝臓が何時間働くか、年間の残業は何時間か、働き方改革の上限と比べてどうかを出します。厚労省の飲酒ガイドラインに基づく計算。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/kanzo.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="肝臓の残業時間"><meta property="og:description" content="今夜飲む量を入れると、肝臓が何時間働くか、年間の残業は何時間か、働き方改革の上限と比べてどうかを出します。厚労省の飲酒ガイドラインに基づく計算。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/kanzo.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="肝臓の残業時間"><meta name="twitter:description" content="今夜飲む量を入れると、肝臓が何時間働くか、年間の残業は何時間か、働き方改革の上限と比べてどうかを出します。厚労省の飲酒ガイドラインに基づく計算。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>肝臓の残業時間</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* 布置: 肝臓のタイムカード。打刻の数字と、残業の棒。笑ってから、少し黙る。 */
+:root{
+  --bg:#edeef1; --paper:#f8f8f6; --fg:#1c2230; --mute:#6b7281; --line:#d3d6dd;
+  --liver:#a0462e; --liver-soft:#f1dcd5; --good:#2e7d4f; --good-soft:#d9eee1; --warn:#c9566f;
+  --night:#0f1422; --night2:#1c2238; --night-fg:#ece7da; --night-mute:#9aa0b0; --card:#fbf7ee; --card-ink:#2a2420;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif; --mono:"Courier Prime","Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --liver:#e07a5f; --liver-soft:#3a241d; --good:#5fbf8f; --good-soft:#15291f; --warn:#e58aa3; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --liver:#e07a5f; --liver-soft:#3a241d; --good:#5fbf8f; --good-soft:#15291f; --warn:#e58aa3; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.7;padding-block:0 72px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto}
+.night{background:linear-gradient(180deg,var(--night),var(--night2));color:var(--night-fg);padding-block:40px 48px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,6.5vw,48px);letter-spacing:.06em;margin:0;line-height:1.25}
+.lead{color:var(--night-mute);margin:10px 0 0;font-size:15px;max-width:34em}
+.big{margin-top:26px}
+.big .k{font-size:13px;letter-spacing:.15em;color:var(--night-mute)}
+.big .n{font-family:var(--display);font-weight:800;font-size:clamp(56px,15vw,112px);line-height:1;font-variant-numeric:tabular-nums}
+.big .n small{font-size:.32em;color:var(--night-mute);margin-left:.15em;letter-spacing:.1em}
+.big .s{font-size:14px;color:var(--night-mute);margin-top:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px 20px;margin-top:-24px;position:relative;z-index:1;display:grid;gap:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+label{display:grid;gap:6px;font-size:13px;color:var(--mute);letter-spacing:.04em}
+input,select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:6px 2px;border-radius:0;min-width:0;width:100%;font-variant-numeric:tabular-nums}
+input:focus,select:focus{outline:none;border-bottom-color:var(--liver)}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:14px;padding:8px 0;background:transparent;color:var(--mute);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--fg);color:var(--paper)}
+h3{font-family:var(--display);font-size:15px;letter-spacing:.15em;margin:0;color:var(--mute);font-weight:700}
+.drinks{display:grid;gap:10px}
+.dr{display:grid;grid-template-columns:1.6fr .7fr auto;gap:10px;align-items:end}
+.del{font:inherit;font-size:12px;background:none;border:1px solid var(--line);color:var(--mute);border-radius:3px;padding:6px 10px;cursor:pointer}
+.add{font:inherit;font-size:13px;font-weight:700;background:none;border:1px dashed var(--line);color:var(--fg);border-radius:3px;padding:9px;cursor:pointer}
+.hint{font-size:12px;color:var(--mute)}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.5vw,26px);letter-spacing:.08em;margin:0;line-height:1.3}
+.eyebrow{font-size:12px;letter-spacing:.3em;color:var(--mute)}
+#result{margin-top:44px;display:grid;gap:52px}
+.ch{display:grid;gap:14px}
+/* タイムカード */
+.tc{background:var(--card);color:var(--card-ink);border:1px solid #cfc3b0;max-width:420px;padding:18px 20px 22px;font-family:var(--mono);box-shadow:0 14px 30px -18px rgba(0,0,0,.5);position:relative}
+.tc::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:36px;height:10px;border-radius:5px;background:#e9e2d4;border:1px solid #cfc3b0}
+.tc .ttl{text-align:center;font-weight:700;letter-spacing:.3em;font-size:15px;margin:14px 0 10px;border-bottom:2px solid #2a2420;padding-bottom:6px}
+.tc table{width:100%;border-collapse:collapse;font-size:14px}
+.tc td{padding:7px 4px;border-bottom:1px dashed #cfc3b0}
+.tc td:last-child{text-align:right;font-weight:700;font-size:18px}
+.tc .ot td:last-child{color:#a0462e}
+.tc .stamp{position:absolute;right:16px;bottom:14px;font-family:var(--display);color:#a0462e;border:2.5px solid #a0462e;border-radius:50%;width:64px;height:64px;display:grid;place-items:center;transform:rotate(-12deg);font-size:15px;letter-spacing:.1em;line-height:1.1;text-align:center}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.c{background:var(--paper);padding:16px 14px;min-width:0}
+.c .k{font-size:12px;color:var(--mute);letter-spacing:.08em}
+.c .n{font-family:var(--display);font-size:28px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.c .n small{font-size:13px;font-family:var(--body);font-weight:500;color:var(--mute);margin-left:4px}
+.c .s{font-size:12px;color:var(--mute);margin-top:4px}
+.limit{display:grid;gap:8px}
+.lb{display:grid;grid-template-columns:150px 1fr auto;gap:10px;align-items:center;font-size:13px}
+.lb .b{height:14px;background:var(--line);border-radius:2px;overflow:hidden;position:relative}
+.lb .b i{display:block;height:100%;background:var(--liver)}
+.lb .b s{position:absolute;top:-3px;width:2px;height:20px;background:var(--fg);text-decoration:none}
+.lb .v{font-family:var(--display);font-size:16px;white-space:nowrap}
+.risk{padding:14px 16px;border-radius:4px;background:var(--liver-soft);font-size:14px}
+.risk.ok{background:var(--good-soft)}
+.risk b{font-family:var(--display);font-size:18px}
+.plan{display:grid;gap:10px}
+.goal .t{display:flex;justify-content:space-between;font-size:13px;color:var(--mute)}
+input[type=range]{width:100%;accent-color:var(--good);border:0;padding:0;height:28px}
+.goal .v{font-family:var(--display);font-size:20px}
+.goal .v b{color:var(--good);font-size:28px}
+.cardimg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);background:#0f1422}
+textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 18px;border-radius:3px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.sister{font-size:13px;color:var(--mute)}
+.sister a{color:var(--liver)}
+</style>
+
+<header class="night gut"><div class="wrap">
+  <h1>肝臓の残業時間</h1>
+  <p class="lead">あなたが寝ているあいだ、肝臓は働いています。今夜飲む量を入れると、肝臓の勤務時間と、年間の残業時間が出ます。働き方改革の上限と比べてみてください。</p>
+  <div class="big"><div class="k">肝臓の年間残業</div><div class="n"><span id="yearh">—</span><small>時間</small></div><div class="s" id="bigs"></div></div>
+</div></header>
+
+<main class="gut"><div class="wrap">
+  <div class="card">
+    <div class="row">
+      <label>体重<input type="number" id="kg" value="65" min="30" max="200" inputmode="numeric"></label>
+      <label>性別<div class="seg" id="sex"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button></div></label>
+      <label>年齢<input type="number" id="age" value="38" min="20" max="90" inputmode="numeric"></label>
+      <label>飲む日数／週<input type="number" id="days" value="5" min="0" max="7" inputmode="numeric"></label>
+      <label>飲み終わる時刻<input type="time" id="endt" value="23:00"></label>
+    </div>
+    <h3>飲む日の1晩の量</h3>
+    <div class="drinks" id="drinks"></div>
+    <button class="add" type="button" id="addd">＋ 飲み物を追加</button>
+    <div class="hint">入力はこの端末の中だけで計算され、どこにも送信されません。初期値は例です。</div>
+  </div>
+
+  <div id="result">
+    <section class="ch">
+      <div class="eyebrow">一　今夜の勤怠</div>
+      <div class="tc" id="tc"></div>
+      <p class="hint" id="tcnote"></p>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">二　積み上げ</div>
+      <h2>肝臓の年間残業と、人間の上限</h2>
+      <div class="counts" id="counts"></div>
+      <div class="limit" id="limit"></div>
+      <div class="risk" id="risk"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">三　休ませる</div>
+      <h2>休肝日を増やすと</h2>
+      <div class="plan">
+        <div class="goal"><div class="t"><span>週の休肝日</span><span id="offv">2日</span></div><input type="range" id="off" min="0" max="7" step="1" value="2" aria-label="週の休肝日"><div class="v">年間残業は <b id="newh">—</b> 時間に。<span id="offnote"></span></div></div>
+        <p class="hint" id="plannote"></p>
+      </div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">四　残す</div>
+      <h2>画像と文章</h2>
+      <img class="cardimg" id="cardimg" alt="結果画像のプレビュー" width="1200" height="630">
+      <canvas id="cardcv" hidden></canvas>
+      <div class="btns"><button class="btn primary" id="copyimg" type="button">画像をコピー</button><button class="btn" id="dlimg" type="button">画像を保存</button></div>
+      <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">文章をコピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+      <p class="sister">姉妹作：<a href="shukan.html">その習慣、何年？</a> ／ <a href="ato-nankai.html">あと何回</a></p>
+    </section>
+
+    <p class="foot">計算根拠：純アルコール量＝飲料の量(ml)×度数×0.8。肝臓の分解速度は体重1kgあたり1時間に約0.1g（厚生労働省 e-ヘルスネット、個人差が大きい）。残業の上限は労働基準法の時間外労働の上限「年720時間」、月の比較は過労死ラインとされる「月80時間」。「生活習慣病のリスクを高める飲酒」は厚生労働省の基準で1日あたり純アルコール男性40g・女性20g以上。該当者の割合は「令和5年国民健康・栄養調査」（男性14.1%、女性9.5%、最多は男性40代23.6%）。残り人生は「令和6年簡易生命表」。肝臓は「残業」という言い方をしませんし、分解中ずっと他の仕事を休むわけでもありません。数字は目安で、診断ではありません。つらい飲み方になっていると感じたら、医療機関や相談窓口へ。</p>
+  </div>
+</div></main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const LE={m:{0:81.09,5:76.31,10:71.34,15:66.37,20:61.39,25:56.56,30:51.68,35:46.85,40:42.06,45:37.32,50:32.63,55:28.05,60:23.68,65:19.52,70:15.56,75:11.89,80:8.61,85:5.98,90:4.16,95:2.90,100:2.00,110:1.2},
+            f:{0:87.14,5:82.33,10:77.35,15:72.38,20:67.39,25:62.47,30:57.56,35:52.68,40:47.82,45:42.99,50:38.23,55:33.54,60:28.91,65:24.38,70:19.96,75:15.68,80:11.63,85:7.98,90:5.47,95:3.50,100:2.30,110:1.4}};
+  function remain(age,sex){ const t=LE[sex]; const ks=Object.keys(t).map(Number).sort((a,b)=>a-b); if(age<=0)return t[0]; if(age>=110)return t[110]; let lo=0,hi=110; for(let i=0;i<ks.length-1;i++){if(age>=ks[i]&&age<=ks[i+1]){lo=ks[i];hi=ks[i+1];break;}} return t[lo]+(t[hi]-t[lo])*(age-lo)/(hi-lo); }
+  const $=id=>document.getElementById(id); const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  const D=[['ビール 350ml缶',350,.05],['ビール 500ml缶（ロング缶）',500,.05],['ハイボール 350ml缶 7%',350,.07],['ハイボール 500ml缶 7%',500,.07],['チューハイ 350ml缶 5%',350,.05],['ストロング系 500ml缶 9%',500,.09],['ワイン グラス1杯 125ml',125,.12],['日本酒 1合 180ml',180,.15],['焼酎 ロック1杯 100ml 25%',100,.25],['ウイスキー シングル 30ml',30,.4],['生ビール 中ジョッキ 435ml',435,.05]];
+  const store={get(k){try{return JSON.parse(localStorage.getItem('kanzo:'+k));}catch(e){return null;}},set(k,v){try{localStorage.setItem('kanzo:'+k,JSON.stringify(v));}catch(e){}}};
+  let sex='m', drinks=[{i:1,n:2}];
+  const sv=store.get('in'); if(sv){ ['kg','age','days','endt','off'].forEach(k=>{if(sv[k]!=null)$(k).value=sv[k];}); sex=sv.sex||'m'; if(Array.isArray(sv.drinks)&&sv.drinks.length)drinks=sv.drinks; }
+  [...$('sex').children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===sex)));
+  $('sex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sex=b.dataset.v;[...$('sex').children].forEach(x=>x.setAttribute('aria-pressed',x===b));calc();});
+  function renderDrinks(){$('drinks').innerHTML=drinks.map((d,k)=>`<div class="dr"><label>種類<select data-k="${k}" data-f="i">${D.map((x,i)=>`<option value="${i}" ${i===d.i?'selected':''}>${x[0]}</option>`).join('')}</select></label><label>本・杯<input type="number" data-k="${k}" data-f="n" value="${d.n}" min="0" max="30" step="0.5" inputmode="decimal"></label><button class="del" type="button" data-del="${k}">削除</button></div>`).join('');}
+  $('drinks').addEventListener('input',e=>{const t=e.target;const k=+t.dataset.k;drinks[k][t.dataset.f]=+t.value;calc();});
+  $('drinks').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;drinks.splice(+b.dataset.del,1);if(!drinks.length)drinks=[{i:0,n:1}];renderDrinks();calc();});
+  $('addd').addEventListener('click',()=>{drinks.push({i:6,n:1});renderDrinks();calc();});
+  ['kg','age','days','endt','off'].forEach(id=>$(id).addEventListener('input',calc));
+  renderDrinks();
+  let S=null;
+  const hm=h=>{const H=Math.floor(h),m=Math.round((h-H)*60);return `${H}時間${String(m).padStart(2,'0')}分`;};
+  function calc(){
+    const kg=+$('kg').value||65, age=+$('age').value||38, days=Math.max(0,Math.min(7,+$('days').value||0)), off=+$('off').value; const R=remain(age,sex);
+    const g=drinks.reduce((s,d)=>s+D[d.i][1]*D[d.i][2]*0.8*d.n,0); const rate=0.1*kg; const hNight=g/rate;
+    const weekH=hNight*days, yearH=weekH*52.18, monthH=yearH/12, lifeH=yearH*R; const limit=720, karoshi=80;
+    const gDay=g*days/7; const riskLine=sex==='m'?40:20; const risky=gDay>=riskLine; const riskPct=sex==='m'?14.1:9.5;
+    const [eh,em]=$('endt').value.split(':').map(Number); const endMin=(eh*60+em+hNight*60); const fin=`${endMin>=1440?'翌':''}${String(Math.floor(endMin/60)%24).padStart(2,'0')}:${String(Math.round(endMin%60)).padStart(2,'0')}`;
+    const newDays=Math.max(0,Math.min(days,7-off)); const newYear=hNight*newDays*52.18; const saved=yearH-newYear;
+    S={kg,age,days,g,hNight,weekH,yearH,monthH,lifeH,limit,gDay,risky,riskPct,fin,R,off,newYear,saved};
+    store.set('in',{kg,age,days,endt:$('endt').value,off,sex,drinks});
+    $('yearh').textContent=fmt(yearH); $('bigs').textContent=`1晩 ${hm(hNight)} × 週${days}日。労働基準法の上限 720時間の ${(yearH/limit).toFixed(1)} 倍。月 ${fmt(monthH)} 時間は、過労死ライン80時間の ${(monthH/karoshi).toFixed(1)} 倍。`;
+    $('tc').innerHTML=`<div class="ttl">勤　怠　票</div><table><tr><td>氏名</td><td>肝　臓</td></tr><tr><td>本日の純アルコール</td><td>${g.toFixed(0)} g</td></tr><tr><td>出　勤（飲み終わり）</td><td>${$('endt').value}</td></tr><tr><td>退　勤（分解完了）</td><td>${fin}</td></tr><tr class="ot"><td>残　業</td><td>${hm(hNight)}</td></tr></table><div class="stamp">${risky?'要<br>注意':'受理'}</div>`;
+    $('tcnote').textContent=`体重${kg}kgの肝臓は1時間に約 ${rate.toFixed(1)}g を分解します。${endMin>=1440+6*60?'朝起きても、まだ働いています。':endMin>=1440?'あなたが眠っているあいだに退勤します。':'日付が変わる前に終わります。'}`;
+    $('counts').innerHTML=[['1晩',hm(hNight),'',`純アルコール ${g.toFixed(0)}g`],['1週間',fmt(weekH),'時間',`${days}日勤務`],['1年',fmt(yearH),'時間',`${fmt(yearH/24)} 日分`],['残りの人生',fmt(lifeH),'時間',`${(lifeH/8760).toFixed(1)} 年分、夜勤`]].map(([k,n,u,s])=>`<div class="c"><div class="k">${k}</div><div class="n">${n}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+    const mx=Math.max(yearH,limit)*1.1;
+    $('limit').innerHTML=`<div class="lb"><span>肝臓の年間残業</span><span class="b"><i style="width:${yearH/mx*100}%"></i><s style="left:${limit/mx*100}%"></s></span><span class="v">${fmt(yearH)}h</span></div><div class="lb"><span>人間の上限（年720h）</span><span class="b"><i style="width:${limit/mx*100}%;background:var(--mute)"></i></span><span class="v">720h</span></div>`;
+    $('risk').className='risk'+(risky?'':' ok');
+    $('risk').innerHTML= risky? `1日平均 <b>${gDay.toFixed(0)}g</b>。厚労省の「生活習慣病のリスクを高める飲酒」（${sex==='m'?'男性40g':'女性20g'}/日以上）に該当します。日本の${sex==='m'?'男性':'女性'}の ${riskPct}% と同じ側。${sex==='m'&&age>=40&&age<50?'40代男性では23.6%、4人に1人です。':''}`
+      : `1日平均 <b>${gDay.toFixed(0)}g</b>。厚労省のリスク基準（${sex==='m'?'男性40g':'女性20g'}/日）未満です。${gDay>20?'ただし「節度ある適度な飲酒」の目安20g/日は超えています。':'節度ある飲酒の目安（20g/日）の範囲内。'}`;
+    $('offv').textContent=`${off}日`; $('newh').textContent=fmt(newYear); $('offnote').textContent= saved>0? `${fmt(saved)} 時間の残業が消えます。${newYear<=limit?'人間の上限の内側に入ります。':`上限まで、あと ${fmt(newYear-limit)} 時間。`}`:'';
+    const need=Math.ceil(7-limit/52.18/hNight); $('plannote').textContent= yearH>limit? (need<=7&&need>0? `年720時間以内にするには、休肝日が週 ${Math.max(0,Math.min(7,need))} 日必要です。本数を減らす方が早い場合もあります。`:`休肝日だけでは年720時間を下回れません。1晩の量を減らす必要があります。`) : '年720時間の内側です。この調子で。';
+    const text=[`肝臓の残業時間`,`1晩 ${hm(hNight)}（純アルコール${g.toFixed(0)}g）× 週${days}日`,`年間 ${fmt(yearH)} 時間（労基法の上限720hの${(yearH/limit).toFixed(1)}倍）`,`残りの人生で ${(lifeH/8760).toFixed(1)} 年分の夜勤`,`#肝臓の残業時間`].join('\n');
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    drawCard();
+  }
+  async function drawCard(){
+    try{await document.fonts.load('800 100px "Shippori Mincho"');await document.fonts.load('500 30px "Zen Kaku Gothic New"');}catch(e){}
+    const W=1200,H=630,cv=$('cardcv');cv.width=W;cv.height=H;const x=cv.getContext('2d');const MIN='"Shippori Mincho","Hiragino Mincho ProN",serif',GO='"Zen Kaku Gothic New","Hiragino Sans",sans-serif';
+    const bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#0f1422');bg.addColorStop(1,'#1c2238');x.fillStyle=bg;x.fillRect(0,0,W,H);
+    x.fillStyle='#9aa0b0';x.font=`500 26px ${GO}`;x.fillText(`1晩 ${hm(S.hNight)} × 週${S.days}日。肝臓の年間残業は`,70,110);
+    x.fillStyle='#ece7da';x.font=`800 190px ${MIN}`;const ys=fmt(S.yearH);x.fillText(ys,70,300);const nw=x.measureText(ys).width;x.font=`700 56px ${MIN}`;x.fillText('時間',70+nw+14,300);
+    x.fillStyle='#e07a5f';x.font=`700 40px ${MIN}`;x.fillText(`労働基準法の上限 720時間の ${(S.yearH/S.limit).toFixed(1)} 倍`,70,370);
+    const bx=70,by=420,bw=W-140;const mx=Math.max(S.yearH,S.limit)*1.1; x.fillStyle='rgba(236,231,218,.12)';x.fillRect(bx,by,bw,22);x.fillStyle='#e07a5f';x.fillRect(bx,by,bw*S.yearH/mx,22);x.fillStyle='#ece7da';x.fillRect(bx+bw*S.limit/mx-2,by-8,4,38);x.font=`500 20px ${GO}`;x.fillStyle='#9aa0b0';x.fillText('人間の上限 720h',bx+bw*S.limit/mx+10,by-14);
+    x.fillStyle='#ece7da';x.font=`500 26px ${GO}`;x.fillText(`残りの人生で ${(S.lifeH/8760).toFixed(1)} 年分の夜勤 ・ 休肝日を週${S.off}日にすると −${fmt(S.saved)} 時間`,70,500);
+    x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('肝臓の残業時間',W-60,H-24);x.textAlign='left';
+    $('cardimg').src=cv.toDataURL('image/png');
+  }
+  function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+  $('copyimg').addEventListener('click',()=>{try{const item=new ClipboardItem({'image/png':new Promise(res=>$('cardcv').toBlob(res,'image/png'))});navigator.clipboard.write([item]).then(()=>toast('画像をコピーしました')).catch(()=>toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください'));}catch(e){toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください');}});
+  (async()=>{let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){} if(!dl){$('dlimg').hidden=true;return;} $('dlimg').addEventListener('click',()=>$('cardcv').toBlob(async b=>{try{await dl.save({filename:'kanzo.png',data:b});toast('保存しました');}catch(e){if(!e||e.code!=='declined')toast('保存できませんでした');}},'image/png'));})();
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('sharetext').value).then(()=>toast('コピーしました')).catch(()=>$('sharetext').select());});
+  calc();
+})();
+</script>
+</head><body></body></html>

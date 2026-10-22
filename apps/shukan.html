@@ -1,0 +1,223 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="1日の回数と1回の時間を入れると、その習慣が残りの人生から何年を取るかを生命表で計算し、取り戻すための改善案を出します。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/shukan.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="その習慣、何年？"><meta property="og:description" content="1日の回数と1回の時間を入れると、その習慣が残りの人生から何年を取るかを生命表で計算し、取り戻すための改善案を出します。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/shukan.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="その習慣、何年？"><meta name="twitter:description" content="1日の回数と1回の時間を入れると、その習慣が残りの人生から何年を取るかを生命表で計算し、取り戻すための改善案を出します。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>その習慣、何年？</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 「あと何回」の姉妹作。夜の帯に大きな年数、紙の上に取り戻す計画。 */
+:root{
+  --bg:#edeef1; --paper:#f8f8f6; --fg:#1c2230; --mute:#6b7281; --line:#d3d6dd;
+  --accent:#d07a2a; --accent-soft:#f6e3d0; --good:#2e7d4f; --good-soft:#d9eee1;
+  --night:#0f1422; --night2:#1c2238; --night-fg:#ece7da; --night-mute:#9aa0b0;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --accent:#f0a05a; --accent-soft:#3a2a1a; --good:#5fbf8f; --good-soft:#15291f; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --accent:#f0a05a; --accent-soft:#3a2a1a; --good:#5fbf8f; --good-soft:#15291f; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.7;padding-block:0 72px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:720px;margin:0 auto}
+.night{background:linear-gradient(180deg,var(--night),var(--night2));color:var(--night-fg);padding-block:40px 48px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,6.5vw,48px);letter-spacing:.06em;margin:0;line-height:1.25}
+.lead{color:var(--night-mute);margin:10px 0 0;font-size:15px;max-width:34em}
+.big{margin-top:26px}
+.big .k{font-size:13px;letter-spacing:.15em;color:var(--night-mute)}
+.big .n{font-family:var(--display);font-weight:800;font-size:clamp(64px,17vw,124px);line-height:1;font-variant-numeric:tabular-nums}
+.big .n small{font-size:.32em;color:var(--night-mute);margin-left:.15em;letter-spacing:.1em}
+.big .s{font-size:14px;color:var(--night-mute);margin-top:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px 20px;margin-top:-24px;position:relative;z-index:1;display:grid;gap:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+label{display:grid;gap:6px;font-size:13px;color:var(--mute);letter-spacing:.04em}
+input,select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:6px 2px;border-radius:0;min-width:0;width:100%}
+input:focus,select:focus{outline:none;border-bottom-color:var(--accent)}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:14px;padding:8px 0;background:transparent;color:var(--mute);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--fg);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--paper);border-color:var(--fg)}
+.hint{font-size:12px;color:var(--mute)}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.5vw,26px);letter-spacing:.08em;margin:0;line-height:1.3}
+.eyebrow{font-size:12px;letter-spacing:.3em;color:var(--mute)}
+#result{margin-top:44px;display:grid;gap:52px}
+.ch{display:grid;gap:14px}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.c{background:var(--paper);padding:16px 14px;min-width:0}
+.c .k{font-size:12px;color:var(--mute);letter-spacing:.08em}
+.c .n{font-family:var(--display);font-size:28px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.c .n small{font-size:13px;font-family:var(--body);font-weight:500;color:var(--mute);margin-left:4px}
+.c .s{font-size:12px;color:var(--mute);margin-top:4px}
+.eq{display:grid;gap:8px}
+.eq div{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px;align-items:baseline}
+.eq b{font-family:var(--display);font-size:24px;color:var(--accent);font-variant-numeric:tabular-nums}
+.bar{height:14px;background:var(--line);border-radius:2px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .h{background:var(--accent)}
+.bar .g{background:var(--good)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.plan{display:grid;gap:12px}
+.goal{display:grid;gap:6px}
+.goal .t{display:flex;justify-content:space-between;font-size:13px;color:var(--mute)}
+.goal .v{font-family:var(--display);font-size:22px}
+.goal .v b{color:var(--good);font-size:30px}
+input[type=range]{width:100%;accent-color:var(--good);border:0;padding:0;height:28px}
+.steps{display:grid;gap:10px}
+.st{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+.st .no{font-family:var(--display);font-size:20px;font-weight:700;color:var(--accent)}
+.st h4{margin:0 0 4px;font-size:15px}
+.st p{margin:0;font-size:14px;color:var(--mute)}
+.st .gain{font-size:13px;margin-top:6px;color:var(--good);font-weight:700}
+.sched{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px}
+.sched div{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:8px 6px;text-align:center;font-size:12px;color:var(--mute)}
+.sched b{display:block;font-family:var(--display);font-size:18px;color:var(--fg)}
+.cardimg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);background:#0f1422}
+textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 18px;border-radius:3px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.sister{font-size:13px;color:var(--mute)}
+.sister a{color:var(--accent)}
+</style>
+
+<header class="night gut"><div class="wrap">
+  <h1>その習慣、<br>残り人生の何年？</h1>
+  <p class="lead">1日に何回、1回に何分。それだけで、残りの人生からその習慣が持っていく年数が出ます。数字のあとに、取り戻すための計画を。</p>
+  <div class="big"><div class="k" id="bigk">残りの人生から消える時間</div><div class="n"><span id="years">—</span><small>年</small></div><div class="s" id="bigs"></div></div>
+</div></header>
+
+<main class="gut"><div class="wrap">
+  <div class="card">
+    <div class="chips" id="presets"></div>
+    <div class="row">
+      <label>習慣の名前<input type="text" id="hname" value="SNSをだらだら見る" maxlength="20"></label>
+      <label>1日に<div class="seg" id="per"><button type="button" data-v="d" aria-pressed="true">1日あたり</button><button type="button" data-v="w" aria-pressed="false">1週間あたり</button></div></label>
+      <label>回数<input type="number" id="times" value="6" min="0" max="200" step="1" inputmode="decimal"></label>
+      <label>1回の時間<input type="number" id="mins" value="12" min="1" max="600" inputmode="numeric"></label>
+    </div>
+    <div class="row">
+      <label>生年月日<input type="date" id="dob" value="1990-04-01" min="1920-01-01" max="2026-12-31"></label>
+      <label>性別（生命表の区分）<div class="seg" id="sex"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button><button type="button" data-v="a" aria-pressed="false">平均</button></div></label>
+      <label>いつまで続く想定<div class="seg" id="until"><button type="button" data-v="life" aria-pressed="true">一生</button><button type="button" data-v="65" aria-pressed="false">65歳まで</button></div></label>
+    </div>
+    <div class="hint">入力はこの端末の中だけで計算され、どこにも送信されません。習慣の名前も保存されるのはこのブラウザだけです。</div>
+  </div>
+
+  <div id="result">
+    <section class="ch">
+      <div class="eyebrow">一　積み上がる時間</div>
+      <h2 id="h2a"></h2>
+      <div class="counts" id="counts"></div>
+      <div class="bar" id="lifebar"></div>
+      <div class="legend"><span style="color:var(--accent)">■ この習慣</span><span>□ 残りの起きている時間</span></div>
+      <p class="hint" id="barnote"></p>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">二　その時間で、できたはずのこと</div>
+      <h2>同じ時間を別のことに使っていたら</h2>
+      <div class="eq" id="eq"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">三　取り戻す</div>
+      <h2>どれだけ減らすか、決める</h2>
+      <div class="plan">
+        <div class="goal"><div class="t"><span>減らす割合</span><span id="goalpct">50%</span></div><input type="range" id="goal" min="10" max="100" step="5" value="50" aria-label="減らす割合"><div class="v">取り戻せるのは <b id="gain">—</b> 年。1日あたり <span id="gainday"></span>。</div></div>
+        <div class="steps" id="steps"></div>
+        <div><div class="hint" style="margin-bottom:6px">8週間の段階表（1日あたりの分数）</div><div class="sched" id="sched"></div></div>
+      </div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">四　残す</div>
+      <h2>画像と文章</h2>
+      <img class="cardimg" id="cardimg" alt="結果画像のプレビュー" width="1200" height="630">
+      <canvas id="cardcv" hidden></canvas>
+      <div class="btns"><button class="btn primary" id="copyimg" type="button">画像をコピー</button><button class="btn" id="dlimg" type="button">画像を保存</button></div>
+      <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">文章をコピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+      <p class="sister">姉妹作：<a href="ato-nankai.html">あと何回</a>（桜や親に会える残り回数） ／ <a href="yosan.html">残り時間の予算</a>（残りの起きている時間の配分）</p>
+    </section>
+
+    <p class="foot">計算根拠：厚生労働省「令和5年簡易生命表」の年齢別平均余命（線形補間）。「残りの起きている時間」は1日16時間として計算。等価換算は、本1冊6時間、映画1本2時間、英語の実用レベル到達3,000時間（米国務省FSIの日本語話者向け推定を往復で換算）、簿記2級300時間、フルマラソン完走までの練習300時間、海外旅行1回を起きている時間で112時間として概算。改善案は行動科学で一般的な「置き換え」「漸減」「環境設計」の3手法に基づく一般論であり、依存の治療が必要な場合は専門機関に相談してください。</p>
+  </div>
+</div></main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const LE={m:{0:81.09,5:76.31,10:71.34,15:66.37,20:61.39,25:56.56,30:51.68,35:46.85,40:42.06,45:37.32,50:32.63,55:28.05,60:23.68,65:19.52,70:15.56,75:11.89,80:8.61,85:5.98,90:4.16,95:2.90,100:2.00,110:1.2},
+            f:{0:87.14,5:82.33,10:77.35,15:72.38,20:67.39,25:62.47,30:57.56,35:52.68,40:47.82,45:42.99,50:38.23,55:33.54,60:28.91,65:24.38,70:19.96,75:15.68,80:11.63,85:7.98,90:5.47,95:3.50,100:2.30,110:1.4}};
+  function remain(age,sex){ if(sex==='a') return (remain(age,'m')+remain(age,'f'))/2; const t=LE[sex]; const ks=Object.keys(t).map(Number).sort((a,b)=>a-b); if(age<=0)return t[0]; if(age>=110)return t[110]; let lo=0,hi=110; for(let i=0;i<ks.length-1;i++){if(age>=ks[i]&&age<=ks[i+1]){lo=ks[i];hi=ks[i+1];break;}} return t[lo]+(t[hi]-t[lo])*(age-lo)/(hi-lo); }
+  const $=id=>document.getElementById(id); const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  const PRE={
+    'SNSをだらだら見る':{t:6,m:12,per:'d',tips:[['置き換え','開く指が伸びた瞬間に、代わりにKindleか単語帳を開く。同じ「暇の埋め方」を別の中身に差し替える。'],['環境設計','アプリを消してブラウザからだけ使う。ホーム画面1枚目から外す。通知は全部オフ、画面はグレースケール。'],['時間帯ルール','朝起きて30分と、寝る前60分は触らない。この2枠だけで総量の4割が消える人が多い。']]},
+    '動画・ショート動画':{t:3,m:25,per:'d',tips:[['置き換え','見たい欲求は「情報」ではなく「受け身の刺激」。散歩かシャワーで代替すると満足度は近い。'],['環境設計','自動再生をオフ。履歴とおすすめを消す。テレビやPCの大画面でしか見ないルールにして、スマホでは見ない。'],['時間帯ルール','食事中と寝床で見ない。見るなら「何を見るか決めてから」開く。']]},
+    'ポルノ':{t:1,m:30,per:'d',tips:[['置き換え','衝動は10分で波が引く。来たら10分のタイマーをかけて、部屋を出る。筋トレ20回でも、水を飲みに行くでも。'],['環境設計','寝室にスマホとPCを持ち込まない。ブロッカーを入れ、解除コードは信頼できる人に預ける。深夜のひとり時間を構造的になくす。'],['記録','回数と時間帯だけを淡々と記録する。責めずに数える。弱い時間帯が見えると、対策はそこだけでよくなる。']]},
+    'ゲーム':{t:1,m:90,per:'d',tips:[['置き換え','「達成感」が欲しいなら、15分で終わる現実のタスクに達成感の演出を付ける（チェックリスト、タイマー）。'],['環境設計','コントローラーやアプリを物理的に遠くへ。起動に手間がかかるだけで回数は減る。'],['時間帯ルール','平日は0、週末に2時間と決めて、総量ではなく「曜日」で管理する。']]},
+    '酒':{t:1,m:90,per:'d',tips:[['置き換え','最初の1杯だけ炭酸水にする。飲み始めの儀式を残して中身を変える。'],['環境設計','家に置かない。買うなら飲む日に飲む分だけ。'],['休肝日','週2日の休肝日を固定の曜日にする。「今日は飲まない日」を決めるのは朝。']]},
+    'タバコ':{t:12,m:7,per:'d',tips:[['置き換え','一服のきっかけ（食後、休憩）に、深呼吸3回とガムを置く。'],['環境設計','職場に持っていかない。買う場所を遠くにする。'],['本数ルール','1日の本数を決めて、その分だけ朝に取り出す。残りは箱ごと見えない場所へ。']]},
+    '通勤':{t:2,m:45,per:'d',tips:[['置き換え','移動時間を「消える時間」から「学ぶ時間」へ。オーディオブックや語学なら、年に本30冊分になる。'],['環境設計','週1日の在宅、または時差出勤で混雑を避けて座る。座れれば読む・書く時間になる。'],['住む場所','引っ越しは最大の時短。片道15分短くなるだけで、残り人生で約1年分の起きている時間が戻る。']]},
+    'ネットニュース・まとめ':{t:5,m:8,per:'d',tips:[['置き換え','朝に1回、信頼できる媒体を10分だけ。速報を追っても人生の判断は変わらない。'],['環境設計','ニュースアプリを削除し、ブラウザのブックマークからだけ。おすすめ欄はブロック。'],['時間帯ルール','仕事中は開かない。開くなら昼休みの1回。']]},
+    'スマホを何となく見る':{t:40,m:3,per:'d',tips:[['置き換え','手持ち無沙汰の瞬間に何をするか、先に決めておく（ストレッチ、メモ、窓の外を見る）。'],['環境設計','スマホを机の上に置かない。カバンか別の部屋。視界から消すだけで回数は半分になる研究がある。'],['数える','1日の「持ち上げ回数」をスクリーンタイムで見る。数字を見るだけで減る。']]},
+    '自分で決める':{t:1,m:30,per:'d',tips:[['置き換え','その習慣が満たしている欲求（退屈、不安、孤独、疲れ）を一つ言葉にして、同じ欲求を満たす別の行動を1つ決める。'],['環境設計','始めるまでの手間を増やし、やめるまでの手間を減らす。道具を遠くへ、代替を近くへ。'],['漸減','いきなりゼロにしない。2週間ごとに25%ずつ減らす。']]},
+  };
+  const store={get(k){try{return JSON.parse(localStorage.getItem('shukan:'+k));}catch(e){return null;}},set(k,v){try{localStorage.setItem('shukan:'+k,JSON.stringify(v));}catch(e){}}};
+  let sex='m', per='d', until='life', preset='SNSをだらだら見る';
+  const sv=store.get('in'); if(sv){ $('hname').value=sv.name??$('hname').value; $('times').value=sv.t??6; $('mins').value=sv.m??12; $('dob').value=sv.dob||$('dob').value; sex=sv.sex||'m'; per=sv.per||'d'; until=sv.until||'life'; preset=sv.preset||preset; }
+  $('presets').innerHTML=Object.keys(PRE).map(k=>`<button class="chip" type="button" data-k="${k}" aria-pressed="${k===preset}">${k}</button>`).join('');
+  const setSeg=(id,v)=>[...$(id).children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));
+  setSeg('sex',sex); setSeg('per',per); setSeg('until',until);
+  $('presets').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;preset=b.dataset.k;[...$('presets').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));const p=PRE[preset];if(preset!=='自分で決める')$('hname').value=preset;else $('hname').value='';$('times').value=p.t;$('mins').value=p.m;per=p.per;setSeg('per',per);calc();});
+  $('sex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sex=b.dataset.v;setSeg('sex',sex);calc();});
+  $('per').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;per=b.dataset.v;setSeg('per',per);calc();});
+  $('until').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;until=b.dataset.v;setSeg('until',until);calc();});
+  ['hname','times','mins','dob','goal'].forEach(id=>$(id).addEventListener('input',calc));
+  let S=null;
+  function calc(){
+    const name=$('hname').value.trim()||'その習慣'; const t=+$('times').value||0, m=+$('mins').value||0; const dob=new Date($('dob').value+'T00:00:00'); if(isNaN(dob))return;
+    const age=(Date.now()-dob)/(365.25*864e5); const R=remain(age,sex); const horizon= until==='65'? Math.max(0,Math.min(R,65-age)) : R;
+    const minPerDay= per==='d'? t*m : t*m/7; const hDay=minPerDay/60, hWeek=hDay*7, hYear=hDay*365.25, hLife=hYear*horizon;
+    const wakeLife=horizon*365.25*16; const yearsWake=hLife/(365.25*16); const share=hLife/wakeLife;
+    const goal=+$('goal').value/100; const gainH=hLife*goal; const gainY=gainH/(365.25*16);
+    S={name,t,m,age,R,horizon,minPerDay,hDay,hWeek,hYear,hLife,yearsWake,share,goal,gainH,gainY,count:horizon*365.25*(per==='d'?t:t/7)};
+    store.set('in',{name,t,m,dob:$('dob').value,sex,per,until,preset});
+    $('years').textContent= yearsWake>=1? yearsWake.toFixed(1) : (yearsWake*12).toFixed(1); document.querySelector('.big .n small').textContent= yearsWake>=1?'年':'か月';
+    $('bigk').textContent=`「${name}」が残りの人生から持っていく、起きている時間`;
+    $('bigs').textContent=`1日 ${fmt(minPerDay)} 分 × ${until==='65'?'65歳まで':'平均余命まで'} ${horizon.toFixed(1)} 年。合計 ${fmt(hLife)} 時間、${fmt(hLife/24)} 日分。`;
+    $('h2a').textContent=`1日 ${fmt(minPerDay)} 分は、こう積み上がる`;
+    $('counts').innerHTML=[['1週間',hWeek.toFixed(1),'時間',''],['1年',fmt(hYear),'時間',`${fmt(hYear/24)} 日分`],['残りの人生',fmt(hLife),'時間',`あと ${fmt(S.count)} 回`],['起きている時間の',(share*100).toFixed(1),'%','残り人生のうち']].map(([k,n,u,s])=>`<div class="c"><div class="k">${k}</div><div class="n">${n}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+    $('lifebar').innerHTML=`<i class="h" style="width:${Math.min(100,share*100)}%"></i>`;
+    $('barnote').textContent=`残りの起きている時間 ${fmt(wakeLife)} 時間のうち、${fmt(hLife)} 時間。80歳のあなたは「人生の ${(share*100).toFixed(1)}% を${name}に使った人」になります。`;
+    const EQ=[['本を読む',6,'冊'],['映画を観る',2,'本'],['英語を実用レベルにする',3000,'回'],['簿記2級に合格する',300,'回'],['フルマラソンを完走できる体になる',300,'回'],['海外旅行に行く（1週間）',112,'回'],['子どもや親と夕食をとる',1,'回']];
+    $('eq').innerHTML=EQ.map(([k,h,u])=>{const n=hLife/h; return `<div><span>${k}</span><b>${n>=1?fmt(n):n.toFixed(1)}<span style="font-size:14px;color:var(--mute);font-family:var(--body)"> ${u}</span></b></div>`;}).join('');
+    $('goalpct').textContent=Math.round(goal*100)+'%'; $('gain').textContent= gainY>=1? gainY.toFixed(1):(gainY*12).toFixed(1)+'か月＝'; $('gainday').textContent=`${fmt(minPerDay*goal)} 分`;
+    const tips=(PRE[preset]||PRE['自分で決める']).tips;
+    $('steps').innerHTML=tips.map((tp,i)=>`<div class="st"><div class="no">${['一','二','三'][i]}</div><div><h4>${tp[0]}</h4><p>${tp[1]}</p></div></div>`).join('');
+    const target=minPerDay*(1-goal); $('sched').innerHTML=Array.from({length:8},(_,w)=>{const v=minPerDay-(minPerDay-target)*Math.min(1,(w+1)/6);return `<div>第${w+1}週<b>${fmt(v)}</b>分</div>`;}).join('');
+    const text=[`「${name}」1日${fmt(minPerDay)}分は、`,`残りの人生で ${fmt(hLife)} 時間、起きている時間の ${yearsWake>=1?yearsWake.toFixed(1)+'年':(yearsWake*12).toFixed(1)+'か月'}。`,`その時間で本 ${fmt(hLife/6)} 冊、海外旅行 ${fmt(hLife/112)} 回。`,`${Math.round(goal*100)}%減らすと ${gainY>=1?gainY.toFixed(1)+'年':(gainY*12).toFixed(1)+'か月'} 取り戻せる。`,`#その習慣何年`].join('\n');
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    drawCard();
+  }
+  async function drawCard(){
+    try{await document.fonts.load('800 100px "Shippori Mincho"');await document.fonts.load('500 30px "Zen Kaku Gothic New"');}catch(e){}
+    const W=1200,H=630,cv=$('cardcv');cv.width=W;cv.height=H;const x=cv.getContext('2d');const MIN='"Shippori Mincho","Hiragino Mincho ProN",serif',GO='"Zen Kaku Gothic New","Hiragino Sans",sans-serif';
+    const bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#0f1422');bg.addColorStop(1,'#1c2238');x.fillStyle=bg;x.fillRect(0,0,W,H);
+    // 時間のバー背景
+    const cols=60,rows=8,cw=(W-140)/cols,ch=22; const filled=Math.round(cols*rows*Math.min(1,S.share)); for(let i=0;i<cols*rows;i++){const c=i%cols,r=Math.floor(i/cols);x.fillStyle=i<filled?'#d07a2a':'rgba(236,231,218,.12)';x.fillRect(70+c*cw,H-60-rows*ch+r*ch,cw-3,ch-3);} 
+    x.fillStyle='#9aa0b0';x.font=`500 26px ${GO}`;x.fillText(`「${S.name}」1日 ${fmt(S.minPerDay)} 分は、残りの人生の`,70,120);
+    x.fillStyle='#ece7da';x.font=`800 200px ${MIN}`;const ys=S.yearsWake>=1?S.yearsWake.toFixed(1):(S.yearsWake*12).toFixed(1);x.fillText(ys,70,320);const nw=x.measureText(ys).width;x.font=`700 60px ${MIN}`;x.fillText(S.yearsWake>=1?'年':'か月',70+nw+14,320);
+    x.fillStyle='#ece7da';x.font=`500 28px ${GO}`;x.fillText(`合計 ${fmt(S.hLife)} 時間 ・ 本なら ${fmt(S.hLife/6)} 冊 ・ 海外旅行なら ${fmt(S.hLife/112)} 回`,70,380);
+    x.fillStyle='#f0a05a';x.font=`700 34px ${MIN}`;x.fillText(`${Math.round(S.goal*100)}% 減らすと、${S.gainY>=1?S.gainY.toFixed(1)+'年':(S.gainY*12).toFixed(1)+'か月'} 取り戻せる。`,70,430);
+    x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('その習慣、何年？',W-60,H-24);x.textAlign='left';
+    $('cardimg').src=cv.toDataURL('image/png');
+  }
+  function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+  $('copyimg').addEventListener('click',()=>{try{const item=new ClipboardItem({'image/png':new Promise(res=>$('cardcv').toBlob(res,'image/png'))});navigator.clipboard.write([item]).then(()=>toast('画像をコピーしました')).catch(()=>toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください'));}catch(e){toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください');}});
+  (async()=>{let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){} if(!dl){$('dlimg').hidden=true;return;} $('dlimg').addEventListener('click',()=>$('cardcv').toBlob(async b=>{try{await dl.save({filename:'shukan.png',data:b});toast('保存しました');}catch(e){if(!e||e.code!=='declined')toast('保存できませんでした');}},'image/png'));})();
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('sharetext').value).then(()=>toast('コピーしました')).catch(()=>$('sharetext').select());});
+  calc();
+})();
+</script>
+</head><body></body></html>

@@ -1,0 +1,205 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="description" content="SNS・動画・睡眠・家族と過ごす時間を入れると、同年代の日本の平均と比べて、残りの人生で何年ぶん差がつくかを出します。総務省と厚労省の一次データを使用。"><link rel="canonical" href="https://shukiuematsu.github.io/atonankai-lab/apps/vs-heikin.html"><meta property="og:type" content="website"><meta property="og:site_name" content="あと何回 ラボ"><meta property="og:title" content="あなたの1日 vs 日本の平均"><meta property="og:description" content="SNS・動画・睡眠・家族と過ごす時間を入れると、同年代の日本の平均と比べて、残りの人生で何年ぶん差がつくかを出します。総務省と厚労省の一次データを使用。"><meta property="og:url" content="https://shukiuematsu.github.io/atonankai-lab/apps/vs-heikin.html"><meta property="og:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="あなたの1日 vs 日本の平均"><meta name="twitter:description" content="SNS・動画・睡眠・家族と過ごす時間を入れると、同年代の日本の平均と比べて、残りの人生で何年ぶん差がつくかを出します。総務省と厚労省の一次データを使用。"><meta name="twitter:image" content="https://shukiuematsu.github.io/atonankai-lab/og.png"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script>window.claude=window.claude||{use:async function(n){if(n!=="downloads")return null;return{save:async function(r){var b=r.data instanceof Blob?r.data:new Blob([r.data]);var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=r.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000);return{status:"saved"}}}}};</script><title>あなたの1日 vs 日本の平均</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 布置: 左にあなた、右に平均の人。二本の棒を並べ、差を年に換算する。 */
+:root{
+  --bg:#edeef1; --paper:#f8f8f6; --fg:#1c2230; --mute:#6b7281; --line:#d3d6dd;
+  --you:#c9566f; --avg:#5c7399; --you-soft:#f3d9df; --avg-soft:#dde3ec; --good:#2e7d4f;
+  --night:#0f1422; --night2:#1c2238; --night-fg:#ece7da; --night-mute:#9aa0b0;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif; --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --you:#e58aa3; --avg:#8fa3c4; --you-soft:#3a2430; --avg-soft:#232c42; --good:#5fbf8f; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0e1220; --paper:#161b2b; --fg:#ece7da; --mute:#9aa0b0; --line:#2b3246; --you:#e58aa3; --avg:#8fa3c4; --you-soft:#3a2430; --avg-soft:#232c42; --good:#5fbf8f; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.7;padding-block:0 72px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto}
+.night{background:linear-gradient(180deg,var(--night),var(--night2));color:var(--night-fg);padding-block:40px 48px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,46px);letter-spacing:.06em;margin:0;line-height:1.25}
+.lead{color:var(--night-mute);margin:10px 0 0;font-size:15px;max-width:34em}
+.big{margin-top:26px}
+.big .k{font-size:13px;letter-spacing:.15em;color:var(--night-mute)}
+.big .n{font-family:var(--display);font-weight:800;font-size:clamp(40px,10vw,76px);line-height:1.15;font-variant-numeric:tabular-nums}
+.big .n em{font-style:normal;color:#e58aa3}
+.big .s{font-size:14px;color:var(--night-mute);margin-top:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px 20px;margin-top:-24px;position:relative;z-index:1;display:grid;gap:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+label{display:grid;gap:6px;font-size:13px;color:var(--mute);letter-spacing:.04em}
+input,select{font:inherit;font-size:16px;color:var(--fg);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:6px 2px;border-radius:0;min-width:0;width:100%;font-variant-numeric:tabular-nums}
+input:focus,select:focus{outline:none;border-bottom-color:var(--you)}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:14px;padding:8px 0;background:transparent;color:var(--mute);border:0;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--fg);color:var(--paper)}
+.hint{font-size:12px;color:var(--mute)}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(20px,4.5vw,26px);letter-spacing:.08em;margin:0;line-height:1.3}
+.eyebrow{font-size:12px;letter-spacing:.3em;color:var(--mute)}
+#result{margin-top:44px;display:grid;gap:52px}
+.ch{display:grid;gap:14px}
+.cmp{display:grid;gap:14px}
+.m{display:grid;gap:6px;padding:14px 0;border-top:1px solid var(--line)}
+.m:last-child{border-bottom:1px solid var(--line)}
+.m .t{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.m .t b{font-size:16px}
+.m .t span{font-family:var(--display);font-size:16px}
+.m .t span.more{color:var(--you)}
+.m .t span.less{color:var(--good)}
+.bars{display:grid;gap:4px}
+.br{display:grid;grid-template-columns:52px 1fr 92px;gap:10px;align-items:center;font-size:12px;color:var(--mute)}
+.br .b{height:14px;border-radius:2px;background:var(--line);overflow:hidden}
+.br .b i{display:block;height:100%}
+.br.you .b i{background:var(--you)}
+.br.avg .b i{background:var(--avg)}
+.br .v{font-family:var(--display);font-size:14px;color:var(--fg);text-align:right;font-variant-numeric:tabular-nums}
+.m .life{font-size:14px}
+.m .life b{font-family:var(--display);font-size:20px}
+.m .src{font-size:11px;color:var(--mute)}
+.avgday{background:var(--avg-soft);border-radius:4px;padding:16px 18px;display:grid;gap:4px}
+.avgday .h{font-family:var(--display);font-size:17px}
+.avgday p{margin:0;font-size:14px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.c{background:var(--paper);padding:16px 14px;min-width:0}
+.c .k{font-size:12px;color:var(--mute);letter-spacing:.08em}
+.c .n{font-family:var(--display);font-size:28px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.c .n small{font-size:13px;font-family:var(--body);font-weight:500;color:var(--mute);margin-left:4px}
+.c .s{font-size:12px;color:var(--mute);margin-top:4px}
+.cardimg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);background:#0f1422}
+textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);background:var(--paper);color:var(--fg);border-radius:3px;padding:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:10px 18px;border-radius:3px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--fg);color:var(--paper)}
+.foot{font-size:12px;color:var(--mute);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.sister{font-size:13px;color:var(--mute)}
+.sister a{color:var(--you)}
+</style>
+
+<header class="night gut"><div class="wrap">
+  <h1>あなたの1日 vs<br>日本の平均</h1>
+  <p class="lead">SNS、動画、睡眠、家族と過ごす時間。同年代の日本人の平均と比べて、その差は残りの人生で何年になるのか。総務省と厚生労働省の調査から計算します。</p>
+  <div class="big"><div class="k">いちばん差が大きいのは</div><div class="n" id="hero">—</div><div class="s" id="heros"></div></div>
+</div></header>
+
+<main class="gut"><div class="wrap">
+  <div class="card">
+    <div class="row">
+      <label>年齢<input type="number" id="age" value="34" min="13" max="79" inputmode="numeric"></label>
+      <label>性別（生命表の区分）<div class="seg" id="sex"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button><button type="button" data-v="a" aria-pressed="false">平均</button></div></label>
+      <label>仕事をしている<div class="seg" id="work"><button type="button" data-v="y" aria-pressed="true">はい</button><button type="button" data-v="n" aria-pressed="false">いいえ</button></div></label>
+    </div>
+    <div class="row">
+      <label>SNSを見る・書く（平日・分）<input type="number" id="sns" value="90" min="0" max="900" inputmode="numeric"></label>
+      <label>動画を見る（平日・分）<input type="number" id="video" value="120" min="0" max="900" inputmode="numeric"></label>
+      <label>睡眠（時間）<input type="number" id="sleep" value="6.5" min="2" max="14" step="0.25" inputmode="decimal"></label>
+      <label>家族と一緒にいる時間（時間/日）<input type="number" id="family" value="2" min="0" max="24" step="0.5" inputmode="decimal"></label>
+      <label>仕事（時間/平日・通勤除く）<input type="number" id="job" value="9" min="0" max="20" step="0.5" inputmode="decimal"></label>
+    </div>
+    <div class="hint">入力はこの端末の中だけで計算され、どこにも送信されません。初期値は例です。</div>
+  </div>
+
+  <div id="result">
+    <section class="ch">
+      <div class="eyebrow">一　平均の人の1日</div>
+      <div class="avgday" id="avgday"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">二　比べる</div>
+      <h2>同年代の平均と、あなた</h2>
+      <div class="cmp" id="cmp"></div>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">三　合計</div>
+      <h2>残りの人生で、差はこうなる</h2>
+      <div class="sum" id="sum"></div>
+      <p class="hint" id="sumnote"></p>
+    </section>
+
+    <section class="ch">
+      <div class="eyebrow">四　残す</div>
+      <h2>画像と文章</h2>
+      <img class="cardimg" id="cardimg" alt="結果画像のプレビュー" width="1200" height="630">
+      <canvas id="cardcv" hidden></canvas>
+      <div class="btns"><button class="btn primary" id="copyimg" type="button">画像をコピー</button><button class="btn" id="dlimg" type="button">画像を保存</button></div>
+      <textarea id="sharetext" readonly aria-label="シェア用テキスト"></textarea>
+      <div class="btns"><button class="btn primary" id="copy" type="button">文章をコピー</button><a class="btn" id="xlink" href="#" target="_blank" rel="noopener">Xに投稿</a></div>
+      <p class="sister">姉妹作：<a href="ato-nankai.html">あと何回</a> ／ <a href="shukan.html">その習慣、何年？</a> ／ <a href="yosan.html">残り時間の予算</a></p>
+    </section>
+
+    <p class="foot">出典：SNS・動画は総務省情報通信政策研究所「令和6年度 情報通信メディアの利用時間と情報行動に関する調査」（2025年6月公表、13〜79歳、平日1日平均）。睡眠と「家族と一緒にいた時間」は総務省統計局「令和3年社会生活基本調査」（週全体1日平均。家族の時間は20〜24歳2時間51分、25〜29歳3時間29分、35〜39歳5時間32分、総数5時間06分を年代に当てはめ、公表のない年代は総数を使用）。仕事は労働政策研究・研修機構「2025年 一般労働者の年間総実労働時間1,926時間」を年245日で割った値。残り人生は厚生労働省「令和6年簡易生命表」の平均余命。平日の値が毎日続くと仮定し、仕事だけ年245日で計算。令和8年社会生活基本調査の結果（2027年9月以降）が出たら差し替えます。数字は目安であり、評価ではありません。</p>
+  </div>
+</div></main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const LE={m:{0:81.09,5:76.31,10:71.34,15:66.37,20:61.39,25:56.56,30:51.68,35:46.85,40:42.06,45:37.32,50:32.63,55:28.05,60:23.68,65:19.52,70:15.56,75:11.89,80:8.61,85:5.98,90:4.16,95:2.90,100:2.00,110:1.2},
+            f:{0:87.14,5:82.33,10:77.35,15:72.38,20:67.39,25:62.47,30:57.56,35:52.68,40:47.82,45:42.99,50:38.23,55:33.54,60:28.91,65:24.38,70:19.96,75:15.68,80:11.63,85:7.98,90:5.47,95:3.50,100:2.30,110:1.4}};
+  function remain(age,sex){ if(sex==='a') return (remain(age,'m')+remain(age,'f'))/2; const t=LE[sex]; const ks=Object.keys(t).map(Number).sort((a,b)=>a-b); if(age<=0)return t[0]; if(age>=110)return t[110]; let lo=0,hi=110; for(let i=0;i<ks.length-1;i++){if(age>=ks[i]&&age<=ks[i+1]){lo=ks[i];hi=ks[i+1];break;}} return t[lo]+(t[hi]-t[lo])*(age-lo)/(hi-lo); }
+  const $=id=>document.getElementById(id); const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+  // 総務省 R6 平日（分）
+  const SNS={10:80.2,20:88.6,30:53.1,40:40.9,50:34.0,60:15.8,70:3.0}, VID={10:165.4,20:132.6,30:81.8,40:69.4,50:55.0,60:40.8,70:16.1}, NET={10:243.4,20:257.2,30:225.8,40:200.3,50:181.0,60:151.3,70:72.4};
+  // 社会生活基本調査 2021（分/日）
+  const FAM={10:306,20:190,30:332,40:306,50:306,60:306,70:345}; const FAMNOTE={20:'20〜24歳2:51と25〜29歳3:29の平均',30:'35〜39歳の5:32',70:'75歳以上の5:45'};
+  const SLEEP={m:478,f:469,a:474}; const JOB=1926/245*60; // 分/平日
+  const hm=min=>{const h=Math.floor(min/60),m=Math.round(min%60);return h?`${h}時間${String(m).padStart(2,'0')}分`:`${m}分`;};
+  const store={get(k){try{return JSON.parse(localStorage.getItem('vsavg:'+k));}catch(e){return null;}},set(k,v){try{localStorage.setItem('vsavg:'+k,JSON.stringify(v));}catch(e){}}};
+  let sex='m', work='y';
+  const sv=store.get('in'); if(sv){['age','sns','video','sleep','family','job'].forEach(k=>{if(sv[k]!=null)$(k).value=sv[k];}); sex=sv.sex||'m'; work=sv.work||'y';}
+  const setSeg=(id,v)=>[...$(id).children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));
+  setSeg('sex',sex); setSeg('work',work);
+  $('sex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sex=b.dataset.v;setSeg('sex',sex);calc();});
+  $('work').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;work=b.dataset.v;setSeg('work',work);calc();});
+  ['age','sns','video','sleep','family','job'].forEach(id=>$(id).addEventListener('input',calc));
+  let S=null;
+  function calc(){
+    const age=Math.max(13,Math.min(79,+$('age').value||34)); const band=Math.min(70,Math.max(10,Math.floor(age/10)*10)); const R=remain(age,sex);
+    const you={sns:+$('sns').value||0,video:+$('video').value||0,sleep:(+$('sleep').value||0)*60,family:(+$('family').value||0)*60,job:(+$('job').value||0)*60};
+    const avg={sns:SNS[band],video:VID[band],sleep:SLEEP[sex],family:FAM[band],job:JOB};
+    const M=[
+      {k:'sns',name:'SNSを見る・書く',days:365,src:`総務省 令和6年度調査 ${band}代の平日平均`,dir:'cost'},
+      {k:'video',name:'動画を見る',days:365,src:`総務省 令和6年度調査 ${band}代の平日平均`,dir:'cost'},
+      {k:'sleep',name:'睡眠',days:365,src:`社会生活基本調査 2021 ${sex==='m'?'男性':sex==='f'?'女性':'総数'}の平均`,dir:'neutral'},
+      {k:'family',name:'家族と一緒にいる時間',days:365,src:`社会生活基本調査 2021（${FAMNOTE[band]||'総数5:06'}）`,dir:'gain'},
+    ];
+    if(work==='y') M.push({k:'job',name:'仕事',days:245,src:'JILPT 2025 一般労働者 1,926時間/年 ÷ 245日',dir:'neutral'});
+    const rows=M.map(m=>{const d=you[m.k]-avg[m.k]; const yearH=d/60*m.days; const lifeH=yearH*R; return {...m,you:you[m.k],avg:avg[m.k],d,yearH,lifeH,lifeY:lifeH/8760,ratio:avg[m.k]?you[m.k]/avg[m.k]:null};});
+    S={age,band,R,rows,sex};
+    store.set('in',{age,sns:$('sns').value,video:$('video').value,sleep:$('sleep').value,family:$('family').value,job:$('job').value,sex,work});
+    const top=rows.slice().sort((a,b)=>Math.abs(b.lifeH)-Math.abs(a.lifeH))[0];
+    const yrs=Math.abs(top.lifeY); const yTxt=yrs>=1?yrs.toFixed(1)+'年':(yrs*12).toFixed(1)+'か月';
+    $('hero').innerHTML=`同年代より、${top.name}に<br>人生で <em>${yTxt}</em> ${top.d>0?'多く':'少なく'}。`;
+    $('heros').textContent=`1日 ${hm(Math.abs(top.d))} の差 × 残りの人生 ${R.toFixed(1)} 年。平均の ${top.ratio?top.ratio.toFixed(1):'—'} 倍。`;
+    $('avgday').innerHTML=`<div class="h">日本の${band}代の、平均的な平日</div><p>ネットを ${hm(NET[band])} 使い、そのうちSNSに ${hm(SNS[band])}、動画に ${hm(VID[band])}。眠るのは ${hm(SLEEP[sex])}。家族と一緒にいるのは ${hm(FAM[band])}${work==='y'?`。働く人は仕事に ${hm(JOB)}`:''}。</p>`;
+    $('cmp').innerHTML=rows.map(r=>{const max=Math.max(r.you,r.avg,1); const cls=r.d>0?(r.dir==='gain'?'less':'more'):(r.dir==='gain'?'more':'less'); const life=Math.abs(r.lifeY)>=1?Math.abs(r.lifeY).toFixed(1)+'年':(Math.abs(r.lifeY)*12).toFixed(1)+'か月';
+      return `<div class="m"><div class="t"><b>${r.name}</b><span class="${Math.abs(r.d)<5?'':cls}">${r.d>0?'+':r.d<0?'−':''}${hm(Math.abs(r.d))}／日</span></div><div class="bars"><div class="br you"><span>あなた</span><span class="b"><i style="width:${r.you/max*100}%"></i></span><span class="v">${hm(r.you)}</span></div><div class="br avg"><span>平均</span><span class="b"><i style="width:${r.avg/max*100}%"></i></span><span class="v">${hm(r.avg)}</span></div></div><div class="life">残りの人生で <b>${life}</b> ${r.d>0?'多い':'少ない'}（${fmt(Math.abs(r.yearH))} 時間／年）</div><div class="src">${r.src}</div></div>`;}).join('');
+    const costExtra=rows.filter(r=>r.dir==='cost'&&r.d>0).reduce((s,r)=>s+r.lifeH,0); const famGap=rows.find(r=>r.k==='family'); const famMissing=famGap&&famGap.d<0?-famGap.lifeH:0;
+    $('sum').innerHTML=[['SNSと動画で平均より多く使う時間',costExtra>0?fmt(costExtra):'0','時間',costExtra>0?`残り人生で ${(costExtra/8760).toFixed(1)} 年分`:'平均以下です'],['平均に合わせたら戻る時間',costExtra>0?fmt(costExtra):'0','時間',costExtra>0?`本なら ${fmt(costExtra/6)} 冊`:''],['家族の時間が平均より少ない分',famMissing>0?fmt(famMissing):'0','時間',famMissing>0?`${(famMissing/8760).toFixed(1)} 年分、一緒にいない`:'平均以上です'],['残りの人生',R.toFixed(1),'年',`${fmt(R*365.25)} 日`]].map(([k,n,u,s])=>`<div class="c"><div class="k">${k}</div><div class="n">${n}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+    $('sumnote').textContent= costExtra>0&&famMissing>0 ? `SNSと動画の超過分（${fmt(costExtra)} 時間）は、家族の時間の不足分（${fmt(famMissing)} 時間）の ${(costExtra/famMissing).toFixed(1)} 倍。入れ替えれば、足ります。` : '';
+    const text=[`あなたの1日 vs 日本の平均（${band}代）`,...rows.map(r=>`${r.name}：${r.d>0?'+':'−'}${hm(Math.abs(r.d))}/日 → 残り人生で${Math.abs(r.lifeY)>=1?Math.abs(r.lifeY).toFixed(1)+'年':(Math.abs(r.lifeY)*12).toFixed(1)+'か月'}${r.d>0?'多い':'少ない'}`),`#あなたの1日vs日本の平均`].join('\n');
+    $('sharetext').value=text; $('xlink').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text+'\n'+location.href.split('#')[0]);
+    drawCard(top);
+  }
+  async function drawCard(top){
+    try{await document.fonts.load('800 100px "Shippori Mincho"');await document.fonts.load('500 30px "Zen Kaku Gothic New"');}catch(e){}
+    const W=1200,H=630,cv=$('cardcv');cv.width=W;cv.height=H;const x=cv.getContext('2d');const MIN='"Shippori Mincho","Hiragino Mincho ProN",serif',GO='"Zen Kaku Gothic New","Hiragino Sans",sans-serif';
+    const bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#0f1422');bg.addColorStop(1,'#1c2238');x.fillStyle=bg;x.fillRect(0,0,W,H);
+    x.fillStyle='#9aa0b0';x.font=`500 26px ${GO}`;x.fillText(`日本の${S.band}代の平均と比べると、${top.name}に`,70,110);
+    const yrs=Math.abs(top.lifeY); const ys=yrs>=1?yrs.toFixed(1):(yrs*12).toFixed(1); x.fillStyle='#ece7da';x.font=`800 180px ${MIN}`;x.fillText(ys,70,290);const nw=x.measureText(ys).width;x.font=`700 56px ${MIN}`;x.fillText(yrs>=1?'年':'か月',70+nw+14,290);x.font=`700 44px ${MIN}`;x.fillStyle='#e58aa3';x.fillText(top.d>0?'多い':'少ない',70+nw+(yrs>=1?90:150),290);
+    // 4本の比較バー
+    const rows=S.rows.slice(0,4); const bx=70,by=340,bw=W-140; const max=Math.max(...rows.map(r=>Math.max(r.you,r.avg)));
+    rows.forEach((r,i)=>{const y=by+i*56; x.fillStyle='#9aa0b0';x.font=`500 20px ${GO}`;x.fillText(r.name,bx,y+14); const x0=bx+300,w=bw-300-120; x.fillStyle='rgba(236,231,218,.12)';x.fillRect(x0,y,w,10);x.fillStyle='#8fa3c4';x.fillRect(x0,y,w*r.avg/max,10);x.fillStyle='rgba(236,231,218,.12)';x.fillRect(x0,y+14,w,10);x.fillStyle='#e58aa3';x.fillRect(x0,y+14,w*r.you/max,10); x.fillStyle='#ece7da';x.font=`700 20px ${MIN}`;x.textAlign='right';x.fillText(`${r.d>0?'+':'−'}${hm(Math.abs(r.d))}`,W-70,y+18);x.textAlign='left';});
+    x.fillStyle='#9aa0b0';x.font=`500 18px ${GO}`;x.fillText('■ 平均（青）　■ あなた（桃）　総務省 令和6年度調査・社会生活基本調査2021',70,H-60);
+    x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('あなたの1日 vs 日本の平均',W-60,H-24);x.textAlign='left';
+    $('cardimg').src=cv.toDataURL('image/png');
+  }
+  function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+  $('copyimg').addEventListener('click',()=>{try{const item=new ClipboardItem({'image/png':new Promise(res=>$('cardcv').toBlob(res,'image/png'))});navigator.clipboard.write([item]).then(()=>toast('画像をコピーしました')).catch(()=>toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください'));}catch(e){toast('この環境ではコピーできません。画像を長押し／右クリックで保存してください');}});
+  (async()=>{let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){} if(!dl){$('dlimg').hidden=true;return;} $('dlimg').addEventListener('click',()=>$('cardcv').toBlob(async b=>{try{await dl.save({filename:'vs-heikin.png',data:b});toast('保存しました');}catch(e){if(!e||e.code!=='declined')toast('保存できませんでした');}},'image/png'));})();
+  $('copy').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText($('sharetext').value).then(()=>toast('コピーしました')).catch(()=>$('sharetext').select());});
+  calc();
+})();
+</script>
+</head><body></body></html>

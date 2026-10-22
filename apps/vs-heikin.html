@@ -191,7 +191,7 @@ textarea{font:inherit;font-size:14px;line-height:1.7;width:100%;min-height:150px
     // 4本の比較バー
     const rows=S.rows.slice(0,4); const bx=70,by=340,bw=W-140; const max=Math.max(...rows.map(r=>Math.max(r.you,r.avg)));
     rows.forEach((r,i)=>{const y=by+i*56; x.fillStyle='#9aa0b0';x.font=`500 20px ${GO}`;x.fillText(r.name,bx,y+14); const x0=bx+300,w=bw-300-120; x.fillStyle='rgba(236,231,218,.12)';x.fillRect(x0,y,w,10);x.fillStyle='#8fa3c4';x.fillRect(x0,y,w*r.avg/max,10);x.fillStyle='rgba(236,231,218,.12)';x.fillRect(x0,y+14,w,10);x.fillStyle='#e58aa3';x.fillRect(x0,y+14,w*r.you/max,10); x.fillStyle='#ece7da';x.font=`700 20px ${MIN}`;x.textAlign='right';x.fillText(`${r.d>0?'+':'−'}${hm(Math.abs(r.d))}`,W-70,y+18);x.textAlign='left';});
-    x.fillStyle='#9aa0b0';x.font=`500 18px ${GO}`;x.fillText('■ 平均（青）　■ あなた（桃）　総務省 令和6年度調査・社会生活基本調査2021',70,H-60);
+    x.fillStyle='#8fa3c4';x.fillRect(70,H-76,16,16);x.fillStyle='#e58aa3';x.fillRect(190,H-76,16,16);x.fillStyle='#9aa0b0';x.font=`500 18px ${GO}`;x.fillText('平均',94,H-62);x.fillText('あなた',214,H-62);x.fillText('総務省 令和6年度調査・社会生活基本調査2021',320,H-62);
     x.textAlign='right';x.fillStyle='#ece7da';x.font=`700 28px ${MIN}`;x.fillText('あなたの1日 vs 日本の平均',W-60,H-24);x.textAlign='left';
     $('cardimg').src=cv.toDataURL('image/png');
   }
